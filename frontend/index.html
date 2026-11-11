@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard del Sistema de Comunicación Prioritaria para monitorear hornos, emergencias y enlaces de comunicación.">
+    <title>Centro de Control | Sistema de Comunicación Prioritaria</title>
+</head>
+<body>
+    <aside aria-label="Navegación principal">
+        <header>
+            <p aria-hidden="true">SCP</p>
+            <div>
+                <p>Sistema de</p>
+                <p>Comunicación Prioritaria</p>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="index.html" aria-current="page">Dashboard</a></li>
+                <li><a href="pages/monitoreo.html">Monitoreo</a></li>
+                <li><a href="pages/comunicaciones.html">Comunicaciones</a></li>
+                <li><a href="pages/congestión.html">Congestión y prioridades</a></li>
+                <li><a href="pages/experimentos.html">Pruebas e historial</a></li>
+            </ul>
+        </nav>
+
+        <footer>
+            <p>Proyecto académico</p>
+            <p>Versión 0.1.0</p>
+        </footer>
+    </aside>
+
+    <div>
+        <header>
+            <div>
+                <p>Centro de control</p>
+                <h1>Monitoreo general</h1>
+            </div>
+
+            <dl aria-label="Estado general del sistema">
+                <div>
+                    <dt>Conexión</dt>
+                    <dd>En línea</dd>
+                </div>
+                <div>
+                    <dt>Modo</dt>
+                    <dd>Automático</dd>
+                </div>
+                <div>
+                    <dt>Fecha</dt>
+                    <dd><time datetime="2026-11-11">11 de noviembre de 2026</time></dd>
+                </div>
+                <div>
+                    <dt>Hora</dt>
+                    <dd><time datetime="14:35">14:35</time></dd>
+                </div>
+            </dl>
+
+            <p role="status">Una emergencia activa</p>
+        </header>
+
+        <main>
+            <section aria-labelledby="areas-title">
+                <header>
+                    <div>
+                        <p>Vista en tiempo real</p>
+                        <h2 id="areas-title">Áreas de operación</h2>
+                    </div>
+                    <p>Última actualización: <time datetime="2026-11-11T14:35:08-06:00">14:35:08</time></p>
+                </header>
+
+                <div aria-label="Esquema de las tres áreas monitoreadas">
+                    <article aria-labelledby="area-1-title">
+                        <header>
+                            <div>
+                                <p>Área 01</p>
+                                <h3 id="area-1-title">Horno norte</h3>
+                            </div>
+                            <p>Normal</p>
+                        </header>
+                        <dl>
+                            <div><dt>Temperatura</dt><dd><data value="32.4">32.4 °C</data></dd></div>
+                            <div><dt>Sensor KY-026</dt><dd><data value="18">18 % · Nivel bajo</data></dd></div>
+                            <div><dt>Emergencia</dt><dd>No activa</dd></div>
+                            <div><dt>Nodo</dt><dd>Conectado</dd></div>
+                        </dl>
+                    </article>
+
+                    <article aria-labelledby="area-2-title">
+                        <header>
+                            <div>
+                                <p>Área 02</p>
+                                <h3 id="area-2-title">Horno central</h3>
+                            </div>
+                            <p>Crítico</p>
+                        </header>
+                        <dl>
+                            <div><dt>Temperatura</dt><dd><data value="41.8">41.8 °C</data></dd></div>
+                            <div><dt>Sensor KY-026</dt><dd><data value="86">86 % · Nivel alto</data></dd></div>
+                            <div><dt>Emergencia</dt><dd>Activa</dd></div>
+                            <div><dt>Nodo</dt><dd>Conectado</dd></div>
+                        </dl>
+                    </article>
+
+                    <article aria-labelledby="area-3-title">
+                        <header>
+                            <div>
+                                <p>Área 03</p>
+                                <h3 id="area-3-title">Horno sur</h3>
+                            </div>
+                            <p>Advertencia</p>
+                        </header>
+                        <dl>
+                            <div><dt>Temperatura</dt><dd><data value="29.6">29.6 °C</data></dd></div>
+                            <div><dt>Sensor KY-026</dt><dd><data value="34">34 % · Nivel medio</data></dd></div>
+                            <div><dt>Emergencia</dt><dd>No activa</dd></div>
+                            <div><dt>Nodo</dt><dd>Señal débil</dd></div>
+                        </dl>
+                    </article>
+                </div>
+            </section>
+
+            <aside aria-labelledby="messages-title">
+                <header>
+                    <div>
+                        <p>Cola de atención</p>
+                        <h2 id="messages-title">Mensajes prioritarios</h2>
+                    </div>
+                    <p><data value="4">4 pendientes</data></p>
+                </header>
+
+                <ol>
+                    <li>
+                        <article>
+                            <header>
+                                <strong>P0 · Emergencia</strong>
+                                <time datetime="2026-11-11T14:34:51-06:00">14:34:51</time>
+                            </header>
+                            <h3>Emergencia detectada</h3>
+                            <p>Activación del pulsador de emergencia en el Horno central.</p>
+                            <p>Área 02 · Requiere atención inmediata</p>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <strong>P1 · Crítica</strong>
+                                <time datetime="2026-11-11T14:34:26-06:00">14:34:26</time>
+                            </header>
+                            <h3>Temperatura fuera de rango</h3>
+                            <p>El Horno central superó el umbral configurado.</p>
+                            <p>Área 02 · 41.8 °C</p>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <strong>P2 · Advertencia</strong>
+                                <time datetime="2026-11-11T14:33:42-06:00">14:33:42</time>
+                            </header>
+                            <h3>Enlace con señal débil</h3>
+                            <p>La intensidad de señal del nodo requiere supervisión.</p>
+                            <p>Área 03 · RSSI −76 dBm</p>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <strong>P3 · Informativa</strong>
+                                <time datetime="2026-11-11T14:30:05-06:00">14:30:05</time>
+                            </header>
+                            <h3>Reporte periódico recibido</h3>
+                            <p>El nodo envió correctamente su paquete de telemetría.</p>
+                            <p>Área 01 · Comunicación estable</p>
+                        </article>
+                    </li>
+                </ol>
+
+                <a href="pages/congestión.html">Ver cola completa de mensajes</a>
+            </aside>
+
+            <section aria-labelledby="charts-title">
+                <header>
+                    <div>
+                        <p>Últimos 30 minutos</p>
+                        <h2 id="charts-title">Tendencias del sistema</h2>
+                    </div>
+                    <p>Datos demostrativos</p>
+                </header>
+
+                <div>
+                    <figure aria-labelledby="temperature-chart-title">
+                        <figcaption>
+                            <h3 id="temperature-chart-title">Temperatura por área</h3>
+                            <p>Evolución térmica de los tres hornos</p>
+                        </figcaption>
+                        <div role="img" aria-label="Espacio reservado para la gráfica de temperatura de las áreas 1, 2 y 3.">
+                            Gráfica de temperatura pendiente de implementación
+                        </div>
+                    </figure>
+
+                    <figure aria-labelledby="ky-chart-title">
+                        <figcaption>
+                            <h3 id="ky-chart-title">Lecturas del sensor KY-026</h3>
+                            <p>Nivel de detección registrado en cada área</p>
+                        </figcaption>
+                        <div role="img" aria-label="Espacio reservado para la gráfica de lecturas de los sensores KY-026.">
+                            Gráfica del sensor KY-026 pendiente de implementación
+                        </div>
+                    </figure>
+
+                    <figure aria-labelledby="events-chart-title">
+                        <figcaption>
+                            <h3 id="events-chart-title">Mensajes por prioridad</h3>
+                            <p>Distribución de eventos P0, P1, P2 y P3</p>
+                        </figcaption>
+                        <div role="img" aria-label="Espacio reservado para la gráfica de mensajes clasificados por prioridad.">
+                            Gráfica de prioridades pendiente de implementación
+                        </div>
+                    </figure>
+                </div>
+            </section>
+
+            <section aria-labelledby="communications-title">
+                <header>
+                    <div>
+                        <p>Diagnóstico de red</p>
+                        <h2 id="communications-title">Estado de comunicaciones</h2>
+                    </div>
+                    <a href="pages/comunicaciones.html">Ver diagnóstico completo</a>
+                </header>
+
+                <table>
+                    <caption>Calidad de los enlaces de comunicación por nodo</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Nodo</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">RSSI</th>
+                            <th scope="col">Latencia</th>
+                            <th scope="col">Pérdidas</th>
+                            <th scope="col">Retransmisiones</th>
+                            <th scope="col">Último paquete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Nodo 01 · Horno norte</th>
+                            <td>Estable</td>
+                            <td>−58 dBm</td>
+                            <td>25 ms</td>
+                            <td>0.0 %</td>
+                            <td>0</td>
+                            <td><time datetime="2026-11-11T14:35:07-06:00">Hace 1 s</time></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nodo 02 · Horno central</th>
+                            <td>Estable</td>
+                            <td>−61 dBm</td>
+                            <td>31 ms</td>
+                            <td>0.8 %</td>
+                            <td>1</td>
+                            <td><time datetime="2026-11-11T14:35:06-06:00">Hace 2 s</time></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nodo 03 · Horno sur</th>
+                            <td>Degradado</td>
+                            <td>−76 dBm</td>
+                            <td>75 ms</td>
+                            <td>3.4 %</td>
+                            <td>4</td>
+                            <td><time datetime="2026-11-11T14:35:03-06:00">Hace 5 s</time></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
