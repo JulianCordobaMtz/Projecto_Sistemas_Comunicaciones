@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Variables privadas
+.env
+.env.*
+
+# Bases de datos locales
+*.sqlite3
+*.db
+
+# Archivos temporales
+*.log
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+
+# Node (si se utiliza posteriormente)
+node_modules/
+dist/
