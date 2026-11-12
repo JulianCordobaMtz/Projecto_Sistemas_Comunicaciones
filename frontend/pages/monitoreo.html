@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Monitoreo detallado de hornos y sensores del Sistema de Comunicación Prioritaria.">
+    <title>Monitoreo | Sistema de Comunicación Prioritaria</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/componentes.css">
+    <link rel="stylesheet" href="../css/monitoreo.css">
+</head>
+<body>
+    <aside aria-label="Navegación principal">
+        <header>
+            <p aria-hidden="true">SCP</p>
+            <div>
+                <p>Sistema de</p>
+                <p>Comunicación Prioritaria</p>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="../index.html">Dashboard</a></li>
+                <li><a href="monitoreo.html" aria-current="page">Monitoreo</a></li>
+                <li><a href="comunicaciones.html">Comunicaciones</a></li>
+                <li><a href="experimentos.html">Pruebas e historial</a></li>
+            </ul>
+        </nav>
+
+        <footer>
+            <p>Proyecto académico</p>
+            <p>Versión 0.1.0</p>
+        </footer>
+    </aside>
+
+    <div>
+        <header>
+            <div>
+                <p>Supervisión operativa</p>
+                <h1>Monitoreo detallado</h1>
+            </div>
+
+            <dl aria-label="Estado general del sistema">
+                <div><dt>Conexión</dt><dd>En línea</dd></div>
+                <div><dt>Modo</dt><dd>Automático</dd></div>
+                <div><dt>Fecha</dt><dd><time datetime="2026-11-11">11 de noviembre de 2026</time></dd></div>
+                <div><dt>Hora</dt><dd><time datetime="14:35">14:35</time></dd></div>
+            </dl>
+
+            <p role="status">Una emergencia activa</p>
+        </header>
+
+        <main>
+            <section aria-labelledby="selector-title">
+                <header>
+                    <div>
+                        <p>Selección de área</p>
+                        <h2 id="selector-title">Hornos monitoreados</h2>
+                    </div>
+                    <p>Última lectura: <time datetime="2026-11-11T14:35:08-06:00">14:35:08</time></p>
+                </header>
+
+                <div role="group" aria-label="Seleccionar horno">
+                    <button type="button" aria-pressed="false">
+                        <span>Área 01</span>
+                        <strong>Horno norte</strong>
+                        <small>Normal · 32.4 °C</small>
+                    </button>
+                    <button type="button" aria-pressed="true">
+                        <span>Área 02</span>
+                        <strong>Horno central</strong>
+                        <small>Crítico · 41.8 °C</small>
+                    </button>
+                    <button type="button" aria-pressed="false">
+                        <span>Área 03</span>
+                        <strong>Horno sur</strong>
+                        <small>Advertencia · 29.6 °C</small>
+                    </button>
+                </div>
+            </section>
+
+            <section aria-labelledby="selected-area-title">
+                <header>
+                    <div>
+                        <p>Área 02 · Nodo 02</p>
+                        <h2 id="selected-area-title">Horno central</h2>
+                    </div>
+                    <p role="status">Estado crítico</p>
+                </header>
+
+                <div>
+                    <article aria-labelledby="temperature-title">
+                        <header>
+                            <p>Variable térmica</p>
+                            <h3 id="temperature-title">Temperatura</h3>
+                        </header>
+                        <p><data value="41.8">41.8 °C</data></p>
+                        <dl>
+                            <div><dt>Mínima</dt><dd>31.2 °C</dd></div>
+                            <div><dt>Promedio</dt><dd>36.7 °C</dd></div>
+                            <div><dt>Máxima</dt><dd>42.1 °C</dd></div>
+                            <div><dt>Umbral crítico</dt><dd>40.0 °C</dd></div>
+                        </dl>
+                    </article>
+
+                    <article aria-labelledby="sensor-title">
+                        <header>
+                            <p>Detección de flama</p>
+                            <h3 id="sensor-title">Sensor KY-026</h3>
+                        </header>
+                        <p><data value="86">86 %</data></p>
+                        <dl>
+                            <div><dt>Nivel</dt><dd>Alto</dd></div>
+                            <div><dt>Estado</dt><dd>Fuera de rango</dd></div>
+                            <div><dt>Umbral</dt><dd>75 %</dd></div>
+                            <div><dt>Última lectura</dt><dd>Hace 1 s</dd></div>
+                        </dl>
+                    </article>
+
+                    <article aria-labelledby="node-title">
+                        <header>
+                            <p>Disponibilidad</p>
+                            <h3 id="node-title">Sensor y nodo</h3>
+                        </header>
+                        <dl>
+                            <div><dt>Sensor térmico</dt><dd>Operativo</dd></div>
+                            <div><dt>KY-026</dt><dd>Operativo</dd></div>
+                            <div><dt>Nodo 02</dt><dd>Conectado</dd></div>
+                            <div><dt>Frecuencia de lectura</dt><dd>1 segundo</dd></div>
+                            <div><dt>Último paquete</dt><dd>Hace 1 s</dd></div>
+                        </dl>
+                    </article>
+                </div>
+            </section>
+
+            <section aria-labelledby="trends-title">
+                <header>
+                    <div>
+                        <p>Comportamiento reciente</p>
+                        <h2 id="trends-title">Tendencias del horno central</h2>
+                    </div>
+                    <form>
+                        <label for="time-range">Intervalo</label>
+                        <select id="time-range" name="time-range">
+                            <option>Últimos 15 minutos</option>
+                            <option selected>Últimos 30 minutos</option>
+                            <option>Última hora</option>
+                        </select>
+                    </form>
+                </header>
+
+                <div>
+                    <figure aria-labelledby="temperature-detail-title">
+                        <figcaption>
+                            <h3 id="temperature-detail-title">Evolución de temperatura</h3>
+                            <p>Lecturas y umbral crítico del horno seleccionado</p>
+                        </figcaption>
+                        <div role="img" aria-label="Espacio reservado para la gráfica detallada de temperatura.">
+                            Gráfica detallada de temperatura pendiente de implementación
+                        </div>
+                    </figure>
+
+                    <figure aria-labelledby="sensor-detail-title">
+                        <figcaption>
+                            <h3 id="sensor-detail-title">Actividad del KY-026</h3>
+                            <p>Nivel de detección y umbral configurado</p>
+                        </figcaption>
+                        <div role="img" aria-label="Espacio reservado para la gráfica detallada del sensor KY-026.">
+                            Gráfica detallada del KY-026 pendiente de implementación
+                        </div>
+                    </figure>
+                </div>
+            </section>
+
+            <section aria-labelledby="active-condition-title">
+                <header>
+                    <div>
+                        <p>Condición actual</p>
+                        <h2 id="active-condition-title">Incidente del área</h2>
+                    </div>
+                    <time datetime="2026-11-11T14:34:26-06:00">Detectado a las 14:34:26</time>
+                </header>
+
+                <article role="alert">
+                    <header>
+                        <div>
+                            <p>P0 · Atención inmediata</p>
+                            <h3>Emergencia activa en horno central</h3>
+                        </div>
+                        <strong>Sin atender</strong>
+                    </header>
+                    <p>El pulsador de emergencia está activo y la temperatura supera el límite establecido.</p>
+                    <dl>
+                        <div><dt>Temperatura</dt><dd>41.8 °C</dd></div>
+                        <div><dt>Límite</dt><dd>40.0 °C</dd></div>
+                        <div><dt>KY-026</dt><dd>86 %</dd></div>
+                        <div><dt>Duración</dt><dd>42 s</dd></div>
+                    </dl>
+                    <footer>
+                        <button type="button">Reconocer incidente</button>
+                        <a href="experimentos.html">Consultar historial</a>
+                    </footer>
+                </article>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
