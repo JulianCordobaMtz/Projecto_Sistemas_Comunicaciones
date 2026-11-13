@@ -1,0 +1,730 @@
+/* Página de comunicaciones */
+body:has(#network-status-title) main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    max-width: 1540px;
+}
+
+body:has(#network-status-title) main > section {
+    grid-column: 1;
+    padding: 26px;
+}
+
+body:has(#network-status-title) section[aria-labelledby="network-console-title"] {
+    order: 1;
+}
+
+body:has(#network-status-title) section[aria-labelledby="network-status-title"] {
+    order: 2;
+}
+
+body:has(#network-status-title) section[aria-labelledby="congestion-title"] {
+    order: 3;
+}
+
+body:has(#network-status-title) section[aria-labelledby="channel-trend-title"] {
+    order: 4;
+}
+
+body:has(#network-status-title) section[aria-labelledby="priority-diagnostics-title"] {
+    order: 5;
+}
+
+body:has(#network-status-title) main > section > header {
+    margin-bottom: 24px;
+}
+
+body:has(#network-status-title) main > section > header h2 {
+    color: #ffffff;
+    font-size: 1.28rem;
+    font-weight: 800;
+}
+
+body:has(#network-status-title) main > section > header > p {
+    color: #dcebf2;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+body:has(#network-status-title) > div > header > p[role="status"] {
+    color: #fff4d6;
+    border-color: rgba(255, 190, 85, 0.72);
+    background: rgba(255, 190, 85, 0.15);
+    animation: pulso-red-degradada 1.8s ease-in-out infinite;
+}
+
+@keyframes pulso-red-degradada {
+    50% {
+        color: #ffffff;
+        border-color: #ffe1a3;
+        background: rgba(255, 190, 85, 0.28);
+        box-shadow: 0 0 0 4px rgba(255, 190, 85, 0.1), 0 0 24px rgba(255, 190, 85, 0.18);
+    }
+}
+
+/* Resumen general */
+section[aria-labelledby="network-status-title"] > div {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+section[aria-labelledby="network-status-title"] article {
+    min-height: 148px;
+    padding: 20px;
+    border: 2px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: linear-gradient(145deg, rgba(18, 34, 48, 0.8), rgba(7, 16, 24, 0.72));
+}
+
+section[aria-labelledby="network-status-title"] article:first-child {
+    border-color: rgba(255, 190, 85, 0.62);
+}
+
+section[aria-labelledby="network-status-title"] article p {
+    color: #c9dce5;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+section[aria-labelledby="network-status-title"] article strong {
+    display: block;
+    margin-top: 12px;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 1.72rem;
+    line-height: 1.1;
+}
+
+section[aria-labelledby="network-status-title"] article:first-child strong {
+    color: var(--color-warning);
+}
+
+section[aria-labelledby="network-status-title"] article small {
+    display: block;
+    margin-top: 10px;
+    color: #b9ced8;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+/* Congestión y fallos */
+section[aria-labelledby="congestion-title"] {
+    border-color: rgba(255, 190, 85, 0.5);
+}
+
+section[aria-labelledby="congestion-title"] > header > p[role="status"] {
+    padding: 7px 11px;
+    border: 1px solid rgba(255, 190, 85, 0.56);
+    border-radius: 999px;
+    color: #ffffff;
+    background: rgba(255, 190, 85, 0.13);
+    font-family: var(--font-sans);
+    font-weight: 800;
+}
+
+section[aria-labelledby="congestion-title"] > article {
+    padding: 22px;
+    border: 2px solid rgba(255, 190, 85, 0.72);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(255, 190, 85, 0.15), rgba(55, 37, 8, 0.4));
+    box-shadow: inset 5px 0 0 var(--color-warning);
+}
+
+section[aria-labelledby="congestion-title"] article > header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+section[aria-labelledby="congestion-title"] article header p {
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+}
+
+section[aria-labelledby="congestion-title"] article h3 {
+    margin-top: 5px;
+    color: #ffffff;
+    font-size: 1.22rem;
+    font-weight: 800;
+}
+
+section[aria-labelledby="congestion-title"] article time {
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="congestion-title"] article > p {
+    max-width: 950px;
+    margin-top: 16px;
+    color: #fff4d6;
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+section[aria-labelledby="congestion-title"] article dl {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 20px 0 0;
+}
+
+section[aria-labelledby="congestion-title"] article dl > div {
+    padding: 13px;
+    border: 1px solid rgba(255, 226, 165, 0.24);
+    border-radius: 9px;
+    background: rgba(7, 16, 24, 0.44);
+}
+
+section[aria-labelledby="congestion-title"] article dt {
+    color: #d9e6ec;
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+section[aria-labelledby="congestion-title"] article dd {
+    margin: 5px 0 0;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="congestion-title"] > div[hidden] {
+    display: none;
+}
+
+/* Diagnóstico por nodo */
+section[aria-labelledby="nodes-title"] > div {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+section[aria-labelledby="nodes-title"] article {
+    padding: 21px;
+    border: 2px solid rgba(57, 217, 138, 0.46);
+    border-radius: var(--radius-md);
+    background: rgba(7, 16, 24, 0.55);
+}
+
+section[aria-labelledby="nodes-title"] article:last-child {
+    border-color: rgba(255, 190, 85, 0.66);
+}
+
+section[aria-labelledby="nodes-title"] article > header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(143, 167, 181, 0.3);
+}
+
+section[aria-labelledby="nodes-title"] article header p {
+    color: #d7f8ff;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+section[aria-labelledby="nodes-title"] article h3 {
+    margin-top: 4px;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 1.03rem;
+}
+
+section[aria-labelledby="nodes-title"] article header strong {
+    padding: 6px 9px;
+    border-radius: 999px;
+    color: #d8ffeb;
+    background: rgba(57, 217, 138, 0.12);
+    font-size: 0.7rem;
+}
+
+section[aria-labelledby="nodes-title"] article:last-child header strong {
+    color: #fff0c9;
+    background: rgba(255, 190, 85, 0.15);
+}
+
+section[aria-labelledby="nodes-title"] article dl {
+    display: grid;
+    gap: 10px;
+    margin: 16px 0 0;
+}
+
+section[aria-labelledby="nodes-title"] article dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(143, 167, 181, 0.24);
+}
+
+section[aria-labelledby="nodes-title"] article dl > div:first-child {
+    padding-top: 0;
+    border-top: 0;
+}
+
+section[aria-labelledby="nodes-title"] article dt {
+    color: #c5d8e1;
+    font-size: 0.76rem;
+    font-weight: 600;
+}
+
+section[aria-labelledby="nodes-title"] article dd {
+    margin: 0;
+    color: #ffffff;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+/* Tendencias del canal */
+section[aria-labelledby="channel-trend-title"] form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+section[aria-labelledby="channel-trend-title"] label {
+    color: #dcebf2;
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="channel-trend-title"] select {
+    min-height: 40px;
+    padding: 0 36px 0 12px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    color: #ffffff;
+    background: var(--color-surface);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+}
+
+section[aria-labelledby="channel-trend-title"] > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+section[aria-labelledby="channel-trend-title"] figure {
+    min-height: 330px;
+    margin: 0;
+    padding: 20px;
+    border: 2px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: rgba(7, 16, 24, 0.55);
+}
+
+section[aria-labelledby="channel-trend-title"] figcaption h3 {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+section[aria-labelledby="channel-trend-title"] figcaption p {
+    margin-top: 5px;
+    color: #bfd2dc;
+    font-size: 0.75rem;
+}
+
+section[aria-labelledby="channel-trend-title"] figure > div[role="img"] {
+    position: relative;
+    display: grid;
+    height: 230px;
+    place-items: center;
+    margin-top: 20px;
+    overflow: hidden;
+    border: 1px dashed var(--color-border-strong);
+    border-radius: 10px;
+    color: #c7dce5;
+    background:
+        linear-gradient(rgba(53, 83, 104, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(53, 83, 104, 0.2) 1px, transparent 1px),
+        rgba(5, 13, 20, 0.5);
+    background-size: 36px 36px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+}
+
+section[aria-labelledby="channel-trend-title"] figure > div[role="img"]::after {
+    position: absolute;
+    right: 7%;
+    bottom: 31%;
+    left: 7%;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--color-success), var(--color-primary), var(--color-warning));
+    box-shadow: 70px -32px 0 -1px rgba(57, 217, 138, 0.7), 175px -70px 0 -1px rgba(36, 200, 219, 0.7), 270px -18px 0 -1px rgba(255, 190, 85, 0.7);
+    content: "";
+    transform: rotate(-5deg);
+}
+
+/* Diagnóstico avanzado */
+section[aria-labelledby="priority-diagnostics-title"] details {
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: rgba(7, 16, 24, 0.5);
+}
+
+section[aria-labelledby="priority-diagnostics-title"] summary {
+    padding: 17px 20px;
+    color: #ffffff;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+section[aria-labelledby="priority-diagnostics-title"] details > p {
+    padding: 0 20px 16px;
+    color: #c5d8e1;
+    font-size: 0.76rem;
+}
+
+section[aria-labelledby="priority-diagnostics-title"] table {
+    border-top: 1px solid var(--color-border);
+}
+
+section[aria-labelledby="priority-diagnostics-title"] th,
+section[aria-labelledby="priority-diagnostics-title"] td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+    color: #ffffff;
+    text-align: left;
+}
+
+section[aria-labelledby="priority-diagnostics-title"] thead th {
+    background: rgba(18, 34, 48, 0.82);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+section[aria-labelledby="priority-diagnostics-title"] tbody th,
+section[aria-labelledby="priority-diagnostics-title"] tbody td {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+}
+
+section[aria-labelledby="priority-diagnostics-title"] tbody tr:last-child th,
+section[aria-labelledby="priority-diagnostics-title"] tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+@media (max-width: 1400px) {
+    section[aria-labelledby="network-status-title"] > div,
+    section[aria-labelledby="congestion-title"] article dl {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    section[aria-labelledby="nodes-title"] > div {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    section[aria-labelledby="nodes-title"] article:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body:has(#network-status-title) > div > header > p[role="status"] {
+        animation: none;
+    }
+}
+
+/* Consola maestro-detalle de comunicaciones */
+section[aria-labelledby="network-console-title"] > div {
+    display: grid;
+    grid-template-columns: minmax(430px, 0.9fr) minmax(520px, 1.1fr);
+    gap: 20px;
+}
+
+section[aria-labelledby="network-console-title"] > div > section,
+section[aria-labelledby="network-console-title"] > div > article {
+    min-width: 0;
+    padding: 22px;
+    border: 2px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: rgba(7, 16, 24, 0.56);
+}
+
+section[aria-labelledby="topology-title"] > header {
+    margin-bottom: 20px;
+}
+
+section[aria-labelledby="topology-title"] > header p,
+section[aria-labelledby="selected-node-title"] > header p {
+    color: #d7f8ff;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+section[aria-labelledby="topology-title"] h3,
+section[aria-labelledby="selected-node-title"] h3 {
+    margin-top: 4px;
+    color: #ffffff;
+    font-size: 1.08rem;
+    font-weight: 800;
+}
+
+section[aria-labelledby="topology-title"] > div > article {
+    display: grid;
+    width: min(270px, 72%);
+    min-height: 94px;
+    place-content: center;
+    margin: 0 auto;
+    padding: 15px 20px;
+    border: 2px solid rgba(36, 200, 219, 0.58);
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(36, 200, 219, 0.13), rgba(7, 16, 24, 0.74));
+    text-align: center;
+}
+
+section[aria-labelledby="topology-title"] > div > article span,
+section[aria-labelledby="topology-title"] button span {
+    color: #d7f8ff;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+}
+
+section[aria-labelledby="topology-title"] > div > article strong {
+    margin-top: 3px;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+section[aria-labelledby="topology-title"] > div > article small {
+    margin-top: 3px;
+    color: var(--color-success);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="topology-title"] > div > div[aria-hidden="true"] {
+    width: 2px;
+    height: 34px;
+    margin: 0 auto;
+    background: linear-gradient(var(--color-primary), var(--color-border-strong));
+}
+
+section[aria-labelledby="topology-title"] div[role="group"] {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    padding-top: 22px;
+}
+
+section[aria-labelledby="topology-title"] div[role="group"]::before {
+    position: absolute;
+    inset: 0 16.66% auto;
+    height: 2px;
+    background: var(--color-border-strong);
+    content: "";
+}
+
+section[aria-labelledby="topology-title"] button {
+    position: relative;
+    display: grid;
+    min-height: 118px;
+    align-content: center;
+    gap: 4px;
+    padding: 14px 10px;
+    border: 2px solid rgba(57, 217, 138, 0.45);
+    border-radius: 12px;
+    color: #ffffff;
+    background: rgba(7, 16, 24, 0.72);
+    text-align: center;
+    font-family: var(--font-sans);
+    cursor: pointer;
+}
+
+section[aria-labelledby="topology-title"] button::before {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    width: 2px;
+    height: 24px;
+    background: var(--color-border-strong);
+    content: "";
+}
+
+section[aria-labelledby="topology-title"] button[aria-pressed="true"] {
+    border-color: var(--color-warning);
+    background: linear-gradient(145deg, rgba(255, 190, 85, 0.17), rgba(7, 16, 24, 0.76));
+    box-shadow: 0 0 0 3px rgba(255, 190, 85, 0.09);
+}
+
+section[aria-labelledby="topology-title"] button strong {
+    font-size: 0.84rem;
+}
+
+section[aria-labelledby="topology-title"] button small {
+    color: #d8ffeb;
+    font-size: 0.67rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="topology-title"] button[aria-pressed="true"] small {
+    color: #fff0c9;
+}
+
+section[aria-labelledby="selected-node-title"] {
+    border-color: rgba(255, 190, 85, 0.58);
+}
+
+section[aria-labelledby="selected-node-title"] > header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(143, 167, 181, 0.3);
+}
+
+section[aria-labelledby="selected-node-title"] > header > strong {
+    padding: 7px 10px;
+    border-radius: 999px;
+    color: #fff4d6;
+    background: rgba(255, 190, 85, 0.16);
+    font-size: 0.7rem;
+}
+
+section[aria-labelledby="selected-node-title"] > p {
+    margin-top: 18px;
+    color: #d8e7ee;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+section[aria-labelledby="selected-node-title"] dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 18px;
+    margin: 20px 0;
+}
+
+section[aria-labelledby="selected-node-title"] dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(143, 167, 181, 0.25);
+}
+
+section[aria-labelledby="selected-node-title"] dt {
+    color: #c5d8e1;
+    font-size: 0.73rem;
+    font-weight: 600;
+}
+
+section[aria-labelledby="selected-node-title"] dd {
+    margin: 0;
+    color: #ffffff;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="selected-node-title"] > aside {
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 190, 85, 0.38);
+    border-radius: 10px;
+    background: rgba(255, 190, 85, 0.08);
+}
+
+section[aria-labelledby="selected-node-title"] > aside strong {
+    color: #ffffff;
+    font-size: 0.76rem;
+}
+
+section[aria-labelledby="selected-node-title"] > aside p {
+    margin-top: 4px;
+    color: #ffe9bb;
+    font-size: 0.72rem;
+}
+
+/* Gráfica única del enlace seleccionado */
+section[aria-labelledby="channel-trend-title"] > header > div[role="group"] {
+    display: flex;
+    gap: 6px;
+    padding: 5px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: rgba(7, 16, 24, 0.55);
+}
+
+section[aria-labelledby="channel-trend-title"] > header button {
+    min-height: 34px;
+    padding: 0 11px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    color: #c5d8e1;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+section[aria-labelledby="channel-trend-title"] > header button[aria-pressed="true"] {
+    border-color: rgba(36, 200, 219, 0.48);
+    color: #ffffff;
+    background: rgba(36, 200, 219, 0.14);
+}
+
+section[aria-labelledby="channel-trend-title"] > figure {
+    min-height: 390px;
+}
+
+section[aria-labelledby="channel-trend-title"] > figure figcaption {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+section[aria-labelledby="channel-trend-title"] > figure figcaption strong {
+    color: var(--color-warning);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+}
+
+section[aria-labelledby="channel-trend-title"] > figure > div[role="img"] {
+    height: 285px;
+}
+
+@media (max-width: 1400px) {
+    section[aria-labelledby="network-console-title"] > div {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
