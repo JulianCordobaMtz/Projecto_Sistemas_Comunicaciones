@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Diagnóstico de red y comunicaciones del Sistema de Comunicación Prioritaria.">
+    <title>Comunicaciones | Sistema de Comunicación Prioritaria</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/componentes.css">
+    <link rel="stylesheet" href="../css/monitoreo.css">
+</head>
+<body>
+    <aside aria-label="Navegación principal">
+        <header>
+            <p aria-hidden="true">SCP</p>
+            <div>
+                <p>Sistema de</p>
+                <p>Comunicación Prioritaria</p>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="../index.html">Dashboard</a></li>
+                <li><a href="monitoreo.html">Monitoreo</a></li>
+                <li><a href="comunicaciones.html" aria-current="page">Comunicaciones</a></li>
+                <li><a href="experimentos.html">Pruebas e historial</a></li>
+            </ul>
+        </nav>
+
+        <footer>
+            <p>Proyecto académico</p>
+            <p>Versión 0.1.0</p>
+        </footer>
+    </aside>
+
+    <div>
+        <header>
+            <div>
+                <p>Diagnóstico de red</p>
+                <h1>Comunicaciones</h1>
+            </div>
+
+            <dl aria-label="Estado general del sistema">
+                <div><dt>Conexión</dt><dd>En línea</dd></div>
+                <div><dt>Modo</dt><dd>Automático</dd></div>
+                <div><dt>Fecha</dt><dd><time datetime="2026-11-12">12 de noviembre de 2026</time></dd></div>
+                <div><dt>Hora</dt><dd><time datetime="14:35">14:35</time></dd></div>
+            </dl>
+
+            <p role="status">Red degradada</p>
+        </header>
+
+        <main>
+            <section aria-labelledby="network-status-title">
+                <header>
+                    <div>
+                        <p>Supervisión en tiempo real</p>
+                        <h2 id="network-status-title">Estado general de la red</h2>
+                    </div>
+                    <p>Última actualización: <time datetime="2026-11-12T14:35:08-06:00">14:35:08</time></p>
+                </header>
+
+                <div>
+                    <article>
+                        <p>Estado del canal</p>
+                        <strong>Degradado</strong>
+                        <small>Un nodo requiere revisión</small>
+                    </article>
+                    <article>
+                        <p>Nodos disponibles</p>
+                        <strong><data value="3">3 de 3</data></strong>
+                        <small>Todos reportan información</small>
+                    </article>
+                    <article>
+                        <p>Latencia promedio</p>
+                        <strong><data value="43.7">43.7 ms</data></strong>
+                        <small>Dentro del rango operativo</small>
+                    </article>
+                    <article>
+                        <p>Pérdida promedio</p>
+                        <strong><data value="1.4">1.4 %</data></strong>
+                        <small>Elevada en el Nodo 03</small>
+                    </article>
+                </div>
+            </section>
+
+            <section aria-labelledby="congestion-title">
+                <header>
+                    <div>
+                        <p>Condición de transmisión</p>
+                        <h2 id="congestion-title">Congestión y fallos activos</h2>
+                    </div>
+                    <p role="status">1 condición activa</p>
+                </header>
+
+                <article role="alert">
+                    <header>
+                        <div>
+                            <p>Advertencia de red</p>
+                            <h3>Enlace degradado en Nodo 03</h3>
+                        </div>
+                        <time datetime="2026-11-12T14:34:42-06:00">14:34:42</time>
+                    </header>
+                    <p>La intensidad de señal disminuyó y aumentaron las retransmisiones. Los mensajes críticos mantienen atención prioritaria.</p>
+                    <dl>
+                        <div><dt>Origen</dt><dd>Nodo 03 · Horno sur</dd></div>
+                        <div><dt>RSSI</dt><dd>−76 dBm</dd></div>
+                        <div><dt>Retransmisiones</dt><dd>4</dd></div>
+                        <div><dt>Mensajes críticos pendientes</dt><dd>0</dd></div>
+                    </dl>
+                </article>
+
+                <div hidden>
+                    <strong>Sin congestión ni fallos activos</strong>
+                    <p>La red opera dentro de los parámetros establecidos.</p>
+                </div>
+            </section>
+
+            <section aria-labelledby="nodes-title">
+                <header>
+                    <div>
+                        <p>Diagnóstico por enlace</p>
+                        <h2 id="nodes-title">Estado de los nodos</h2>
+                    </div>
+                    <p>3 nodos registrados</p>
+                </header>
+
+                <div>
+                    <article aria-labelledby="node-01-title">
+                        <header>
+                            <div>
+                                <p>Nodo 01</p>
+                                <h3 id="node-01-title">Horno norte</h3>
+                            </div>
+                            <strong>Estable</strong>
+                        </header>
+                        <dl>
+                            <div><dt>RSSI</dt><dd>−58 dBm</dd></div>
+                            <div><dt>Latencia</dt><dd>25 ms</dd></div>
+                            <div><dt>Pérdidas</dt><dd>0.0 %</dd></div>
+                            <div><dt>Retransmisiones</dt><dd>0</dd></div>
+                            <div><dt>Último paquete</dt><dd>Hace 1 s</dd></div>
+                        </dl>
+                    </article>
+
+                    <article aria-labelledby="node-02-title">
+                        <header>
+                            <div>
+                                <p>Nodo 02</p>
+                                <h3 id="node-02-title">Horno central</h3>
+                            </div>
+                            <strong>Estable</strong>
+                        </header>
+                        <dl>
+                            <div><dt>RSSI</dt><dd>−61 dBm</dd></div>
+                            <div><dt>Latencia</dt><dd>31 ms</dd></div>
+                            <div><dt>Pérdidas</dt><dd>0.8 %</dd></div>
+                            <div><dt>Retransmisiones</dt><dd>1</dd></div>
+                            <div><dt>Último paquete</dt><dd>Hace 2 s</dd></div>
+                        </dl>
+                    </article>
+
+                    <article aria-labelledby="node-03-title">
+                        <header>
+                            <div>
+                                <p>Nodo 03</p>
+                                <h3 id="node-03-title">Horno sur</h3>
+                            </div>
+                            <strong>Degradado</strong>
+                        </header>
+                        <dl>
+                            <div><dt>RSSI</dt><dd>−76 dBm</dd></div>
+                            <div><dt>Latencia</dt><dd>75 ms</dd></div>
+                            <div><dt>Pérdidas</dt><dd>3.4 %</dd></div>
+                            <div><dt>Retransmisiones</dt><dd>4</dd></div>
+                            <div><dt>Último paquete</dt><dd>Hace 5 s</dd></div>
+                        </dl>
+                    </article>
+                </div>
+            </section>
+
+            <section aria-labelledby="channel-trend-title">
+                <header>
+                    <div>
+                        <p>Últimos 30 minutos</p>
+                        <h2 id="channel-trend-title">Comportamiento del canal</h2>
+                    </div>
+                    <form>
+                        <label for="network-range">Intervalo</label>
+                        <select id="network-range" name="network-range">
+                            <option>Últimos 15 minutos</option>
+                            <option selected>Últimos 30 minutos</option>
+                            <option>Última hora</option>
+                        </select>
+                    </form>
+                </header>
+
+                <div>
+                    <figure aria-labelledby="latency-chart-title">
+                        <figcaption>
+                            <h3 id="latency-chart-title">Latencia por nodo</h3>
+                            <p>Tiempo de entrega registrado en cada enlace</p>
+                        </figcaption>
+                        <div role="img" aria-label="Espacio reservado para la gráfica de latencia por nodo.">
+                            Gráfica de latencia pendiente de implementación
+                        </div>
+                    </figure>
+                    <figure aria-labelledby="loss-chart-title">
+                        <figcaption>
+                            <h3 id="loss-chart-title">Pérdidas y retransmisiones</h3>
+                            <p>Paquetes que necesitaron recuperación</p>
+                        </figcaption>
+                        <div role="img" aria-label="Espacio reservado para la gráfica de pérdidas y retransmisiones.">
+                            Gráfica de pérdidas pendiente de implementación
+                        </div>
+                    </figure>
+                </div>
+            </section>
+
+            <section aria-labelledby="priority-diagnostics-title">
+                <header>
+                    <div>
+                        <p>Información técnica</p>
+                        <h2 id="priority-diagnostics-title">Diagnóstico avanzado</h2>
+                    </div>
+                    <p>Uso académico y mantenimiento</p>
+                </header>
+
+                <details>
+                    <summary>Ver procesamiento por prioridad</summary>
+                    <p>Este diagnóstico permite verificar que los mensajes críticos conserven preferencia durante una condición de congestión.</p>
+                    <table>
+                        <caption>Estado de procesamiento por nivel de prioridad</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Prioridad</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Pendientes</th>
+                                <th scope="col">Tiempo promedio</th>
+                                <th scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><th scope="row">P0</th><td>Emergencia</td><td>0</td><td>18 ms</td><td>Atención inmediata</td></tr>
+                            <tr><th scope="row">P1</th><td>Alerta crítica</td><td>0</td><td>34 ms</td><td>Normal</td></tr>
+                            <tr><th scope="row">P2</th><td>Telemetría</td><td>3</td><td>92 ms</td><td>Demorado</td></tr>
+                            <tr><th scope="row">P3</th><td>Registro</td><td>6</td><td>180 ms</td><td>En espera</td></tr>
+                        </tbody>
+                    </table>
+                </details>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
