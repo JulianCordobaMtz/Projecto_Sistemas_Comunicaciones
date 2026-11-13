@@ -641,3 +641,54 @@ section[aria-labelledby="active-condition-title"] article footer a {
         grid-column: 1 / -1;
     }
 }
+
+/* Diferenciar selección, criticidad y contexto del dato */
+section[aria-labelledby="selector-title"] button[aria-pressed="true"] {
+    border-color: var(--color-primary);
+    background: linear-gradient(135deg, rgba(36, 200, 219, 0.17), rgba(7, 16, 24, 0.72));
+    box-shadow: 0 0 0 3px rgba(36, 200, 219, 0.1), 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+section[aria-labelledby="selector-title"] button[aria-pressed="true"] small {
+    color: #ffb5bd;
+}
+
+.value-trend,
+.value-explanation {
+    display: block;
+    margin: -8px 0 16px;
+    color: #d5e5ec;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+section[aria-labelledby="active-condition-title"] > article {
+    animation-duration: 2s;
+}
+
+section[aria-labelledby="active-condition-title"] article dl {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+section[aria-labelledby="active-condition-title"] article footer {
+    flex-wrap: wrap;
+}
+
+section[aria-labelledby="active-condition-title"] article footer button:nth-child(2) {
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(18, 34, 48, 0.82);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    section[aria-labelledby="active-condition-title"] > article {
+        animation: none;
+    }
+}

@@ -24,7 +24,6 @@
                 <li><a href="index.html" aria-current="page">Dashboard</a></li>
                 <li><a href="pages/monitoreo.html">Monitoreo</a></li>
                 <li><a href="pages/comunicaciones.html">Comunicaciones</a></li>
-                <li><a href="pages/congestión.html">Congestión y prioridades</a></li>
                 <li><a href="pages/experimentos.html">Pruebas e historial</a></li>
             </ul>
         </nav>
@@ -44,7 +43,7 @@
 
             <dl aria-label="Estado general del sistema">
                 <div>
-                    <dt>Conexión</dt>
+                    <dt>Backend</dt>
                     <dd>En línea</dd>
                 </div>
                 <div>
@@ -63,6 +62,10 @@
 
             <p role="status">Una emergencia activa</p>
         </header>
+
+        <div class="simulation-banner" role="status" hidden>
+            Modo simulación activo · Los eventos mostrados no corresponden a la operación real
+        </div>
 
         <main>
             <section aria-labelledby="areas-title">
@@ -106,7 +109,8 @@
                             <div><dt>Temperatura</dt><dd><data value="32.4">32.4 °C</data></dd></div>
                             <div><dt>Sensor KY-026</dt><dd><data value="18">18 % · Nivel bajo</data></dd></div>
                             <div><dt>Emergencia</dt><dd>No activa</dd></div>
-                            <div><dt>Nodo</dt><dd>Conectado</dd></div>
+                            <div><dt>Enlace</dt><dd>Conectado · −58 dBm</dd></div>
+                            <div><dt>Último dato</dt><dd><time datetime="2026-11-12T14:35:07-06:00">Hace 1 s · 14:35:07</time></dd></div>
                         </dl>
                     </article>
 
@@ -141,7 +145,8 @@
                             <div><dt>Temperatura</dt><dd><data value="41.8">41.8 °C</data></dd></div>
                             <div><dt>Sensor KY-026</dt><dd><data value="86">86 % · Nivel alto</data></dd></div>
                             <div><dt>Emergencia</dt><dd>Activa</dd></div>
-                            <div><dt>Nodo</dt><dd>Conectado</dd></div>
+                            <div><dt>Enlace</dt><dd>Conectado · −61 dBm</dd></div>
+                            <div><dt>Último dato</dt><dd><time datetime="2026-11-12T14:35:06-06:00">Hace 2 s · 14:35:06</time></dd></div>
                         </dl>
                     </article>
 
@@ -151,7 +156,7 @@
                                 <p>Área 03</p>
                                 <h3 id="area-3-title">Horno sur</h3>
                             </div>
-                            <p>Advertencia</p>
+                            <p>Advertencia · Señal débil (−76 dBm)</p>
                         </header>
 
                         <figure class="horno-visual">
@@ -176,7 +181,8 @@
                             <div><dt>Temperatura</dt><dd><data value="29.6">29.6 °C</data></dd></div>
                             <div><dt>Sensor KY-026</dt><dd><data value="34">34 % · Nivel medio</data></dd></div>
                             <div><dt>Emergencia</dt><dd>No activa</dd></div>
-                            <div><dt>Nodo</dt><dd>Señal débil</dd></div>
+                            <div><dt>Enlace</dt><dd>Señal débil · −76 dBm</dd></div>
+                            <div><dt>Último dato</dt><dd><time datetime="2026-11-12T14:35:03-06:00">Hace 5 s · 14:35:03</time></dd></div>
                         </dl>
                     </article>
                 </div>
@@ -188,7 +194,7 @@
                         <p>Seguridad operativa</p>
                         <h2 id="incidents-title">Incidentes activos</h2>
                     </div>
-                    <p><data value="2">2 activos</data></p>
+                    <p><data value="2">P0: 1 · P1: 1</data></p>
                 </header>
 
                 <div class="incident-empty" hidden>
@@ -196,6 +202,7 @@
                     <p>La operación se encuentra dentro de los parámetros establecidos.</p>
                 </div>
 
+                <div class="incident-list">
                 <section class="emergency-card" role="alert" aria-labelledby="emergency-title">
                     <header>
                         <span class="emergency-icon" aria-hidden="true">
@@ -215,8 +222,6 @@
                         <span>Área 02</span>
                         <strong>Horno central</strong>
                     </div>
-
-                    <p>Pulsador de emergencia activado. Requiere atención inmediata.</p>
 
                     <dl>
                         <div>
@@ -248,6 +253,7 @@
                         <strong>41.8 °C / límite 40 °C</strong>
                     </div>
                 </section>
+                </div>
 
                 <footer class="incident-panel-footer">
                     <p>Este panel muestra únicamente emergencias y alertas que requieren intervención.</p>
@@ -293,6 +299,12 @@
                         <div role="img" aria-label="Espacio reservado para la gráfica de mensajes clasificados por prioridad.">
                             Gráfica de prioridades pendiente de implementación
                         </div>
+                        <dl class="priority-summary">
+                            <div><dt>P0</dt><dd>0 en cola · 18 ms</dd></div>
+                            <div><dt>P1</dt><dd>0 en cola · 34 ms</dd></div>
+                            <div><dt>P2</dt><dd>3 en cola · 92 ms</dd></div>
+                            <div><dt>P3</dt><dd>6 en cola · 180 ms</dd></div>
+                        </dl>
                     </figure>
                 </div>
             </section>
@@ -352,5 +364,6 @@
             </section>
         </main>
     </div>
+    <script type="module" src="js/paginas/dashboard.js"></script>
 </body>
 </html>

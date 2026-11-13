@@ -43,7 +43,7 @@
             </div>
 
             <dl aria-label="Estado general del sistema">
-                <div><dt>Conexión</dt><dd>En línea</dd></div>
+                <div><dt>Backend</dt><dd>En línea</dd></div>
                 <div><dt>Modo</dt><dd>Automático</dd></div>
                 <div><dt>Fecha</dt><dd><time datetime="2026-11-12">12 de noviembre de 2026</time></dd></div>
                 <div><dt>Hora</dt><dd><time datetime="14:35">14:35</time></dd></div>
@@ -51,6 +51,10 @@
 
             <p role="status">Registro disponible</p>
         </header>
+
+        <div class="simulation-banner" role="status" hidden>
+            Modo simulación activo · Los eventos mostrados no corresponden a la operación real
+        </div>
 
         <main>
             <section aria-labelledby="history-navigation-title">
@@ -107,7 +111,7 @@
                         <p>Eventos registrados</p>
                         <h2 id="event-history-title">Historial operativo</h2>
                     </div>
-                    <button type="button">Exportar registro</button>
+                    <button type="button">Exportar CSV filtrado</button>
                 </header>
 
                 <form aria-label="Filtros del historial">
@@ -116,12 +120,14 @@
                         <input id="event-search" name="event-search" type="search" placeholder="Área, nodo o descripción">
                     </div>
                     <div>
-                        <label for="event-type">Tipo</label>
-                        <select id="event-type" name="event-type">
-                            <option selected>Todos los eventos</option>
-                            <option>Emergencias</option>
-                            <option>Alertas</option>
-                            <option>Comunicaciones</option>
+                        <label for="event-priority">Prioridad</label>
+                        <select id="event-priority" name="event-priority">
+                            <option selected>Todas</option>
+                            <option>P0</option>
+                            <option>P1</option>
+                            <option>P2</option>
+                            <option>P3</option>
+                            <option>Red</option>
                         </select>
                     </div>
                     <div>
@@ -134,8 +140,12 @@
                         </select>
                     </div>
                     <div>
-                        <label for="event-date">Fecha</label>
-                        <input id="event-date" name="event-date" type="date" value="2026-11-12">
+                        <label for="event-date-from">Desde</label>
+                        <input id="event-date-from" name="event-date-from" type="date" value="2026-11-12">
+                    </div>
+                    <div>
+                        <label for="event-date-to">Hasta</label>
+                        <input id="event-date-to" name="event-date-to" type="date" value="2026-11-12">
                     </div>
                 </form>
 
@@ -149,7 +159,7 @@
                                 <th scope="col">Origen</th>
                                 <th scope="col">Evento</th>
                                 <th scope="col">Duración</th>
-                                <th scope="col">Resultado</th>
+                                <th scope="col">Resultado / operador</th>
                                 <th scope="col">Detalle</th>
                             </tr>
                         </thead>
@@ -160,7 +170,7 @@
                                 <td>Área 02 · Horno central</td>
                                 <td>Pulsador de emergencia activado</td>
                                 <td>42 s</td>
-                                <td>Atendido</td>
+                                <td>Cerrado · Operador 01</td>
                                 <td><button type="button">Ver</button></td>
                             </tr>
                             <tr>
@@ -169,7 +179,7 @@
                                 <td>Área 02 · Horno central</td>
                                 <td>Temperatura sobre el límite</td>
                                 <td>2 min 16 s</td>
-                                <td>Normalizado</td>
+                                <td>Normalizado · Operador 02</td>
                                 <td><button type="button">Ver</button></td>
                             </tr>
                             <tr>
@@ -178,7 +188,7 @@
                                 <td>Nodo 03 · Horno sur</td>
                                 <td>Enlace degradado</td>
                                 <td>4 min 08 s</td>
-                                <td>Recuperado</td>
+                                <td>Recuperado · Sistema</td>
                                 <td><button type="button">Ver</button></td>
                             </tr>
                             <tr>
@@ -187,7 +197,7 @@
                                 <td>Área 03 · Horno sur</td>
                                 <td>Nivel de detección fuera de rango</td>
                                 <td>58 s</td>
-                                <td>Normalizado</td>
+                                <td>Normalizado · Operador 01</td>
                                 <td><button type="button">Ver</button></td>
                             </tr>
                         </tbody>
@@ -210,7 +220,7 @@
                         <p>Evento seleccionado</p>
                         <h2 id="event-detail-title">Detalle del incidente</h2>
                     </div>
-                    <strong>Atendido</strong>
+                    <strong>Cerrada</strong>
                 </header>
 
                 <div>
@@ -222,6 +232,7 @@
                             <div><dt>Reconocimiento</dt><dd>14:35:18</dd></div>
                             <div><dt>Finalización</dt><dd>14:35:33</dd></div>
                             <div><dt>Duración total</dt><dd>42 s</dd></div>
+                            <div><dt>Operador</dt><dd>Operador 01</dd></div>
                         </dl>
                     </article>
 
@@ -247,7 +258,7 @@
                 </header>
 
                 <aside>
-                    <strong>Las pruebas se identifican como simulaciones</strong>
+                    <strong>Modo simulación: inactivo</strong>
                     <p>Sus resultados se almacenan por separado y no se mezclan con los incidentes operativos.</p>
                 </aside>
 
@@ -264,7 +275,16 @@
                         <dl>
                             <div><dt>Última ejecución</dt><dd>12/11/2026 · 10:30</dd></div>
                             <div><dt>Resultado</dt><dd>Correcto</dd></div>
+                            <div><dt>Latencia P0 / P1</dt><dd>18 ms / 34 ms</dd></div>
+                            <div><dt>Latencia P2 / P3</dt><dd>92 ms / 180 ms</dd></div>
+                            <div><dt>Descartados</dt><dd>P0: 0 · P1: 0 · P2: 2 · P3: 5</dd></div>
                         </dl>
+                        <figure class="test-comparison">
+                            <figcaption>Comparación de latencia con y sin priorización</figcaption>
+                            <div role="img" aria-label="Espacio reservado para comparar la latencia con y sin priorización.">
+                                Gráfica comparativa pendiente de implementación
+                            </div>
+                        </figure>
                         <button type="button">Consultar resultado</button>
                     </article>
 
@@ -280,6 +300,8 @@
                         <dl>
                             <div><dt>Última ejecución</dt><dd>11/11/2026 · 16:15</dd></div>
                             <div><dt>Resultado</dt><dd>Correcto</dd></div>
+                            <div><dt>Detección</dt><dd>3.2 s</dd></div>
+                            <div><dt>Recuperación</dt><dd>8.6 s</dd></div>
                         </dl>
                         <button type="button">Consultar resultado</button>
                     </article>
@@ -287,5 +309,6 @@
             </section>
         </main>
     </div>
+    <script type="module" src="../js/paginas/experimentos.js"></script>
 </body>
 </html>

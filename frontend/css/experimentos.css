@@ -1,12 +1,13 @@
 /* Página de pruebas e historial */
 body:has(#history-navigation-title) main {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 390px;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-        "navigation navigation"
-        "summary summary"
-        "history detail"
-        "tests tests";
+        "navigation"
+        "summary"
+        "history"
+        "detail"
+        "tests";
     gap: 22px;
     max-width: 1660px;
 }
@@ -531,5 +532,106 @@ section[aria-labelledby="controlled-tests-title"] article > button {
 
     section[aria-labelledby="history-summary-title"] > div {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.test-comparison {
+    margin: 16px 0;
+    padding: 13px;
+    border: 1px solid rgba(90, 157, 255, 0.34);
+    border-radius: 9px;
+    background: rgba(7, 16, 24, 0.45);
+}
+
+.test-comparison figcaption {
+    color: #ffffff;
+    font-size: 0.74rem;
+    font-weight: 800;
+}
+
+.test-comparison > div[role="img"] {
+    display: grid;
+    min-height: 105px;
+    place-items: center;
+    margin-top: 10px;
+    border: 1px dashed var(--color-border-strong);
+    border-radius: 8px;
+    color: #c5d8e1;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+}
+
+/* Filtros compactos y tabla legible sin perder la última columna */
+section[aria-labelledby="event-history-title"] > form {
+    grid-template-columns: minmax(180px, 1.4fr) repeat(4, minmax(130px, 0.8fr));
+}
+
+section[aria-labelledby="event-history-title"] table {
+    width: 100%;
+    min-width: 1080px;
+    table-layout: auto;
+}
+
+section[aria-labelledby="event-history-title"] td {
+    overflow-wrap: normal;
+}
+
+section[aria-labelledby="event-history-title"] th,
+section[aria-labelledby="event-history-title"] td {
+    min-width: 90px;
+    line-height: 1.45;
+}
+
+section[aria-labelledby="event-history-title"] th:first-child,
+section[aria-labelledby="event-history-title"] td:first-child {
+    min-width: 190px;
+    white-space: nowrap;
+}
+
+section[aria-labelledby="event-history-title"] th:nth-child(2),
+section[aria-labelledby="event-history-title"] td:nth-child(2),
+section[aria-labelledby="event-history-title"] th:nth-child(5),
+section[aria-labelledby="event-history-title"] td:nth-child(5),
+section[aria-labelledby="event-history-title"] th:last-child,
+section[aria-labelledby="event-history-title"] td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+section[aria-labelledby="event-history-title"] th:nth-child(3),
+section[aria-labelledby="event-history-title"] td:nth-child(3) {
+    min-width: 185px;
+}
+
+section[aria-labelledby="event-history-title"] th:nth-child(4),
+section[aria-labelledby="event-history-title"] td:nth-child(4) {
+    min-width: 230px;
+}
+
+section[aria-labelledby="event-history-title"] th:nth-child(6),
+section[aria-labelledby="event-history-title"] td:nth-child(6) {
+    min-width: 185px;
+}
+
+section[aria-labelledby="controlled-tests-title"] > aside strong {
+    padding: 6px 10px;
+    border-radius: 999px;
+    color: #ffffff;
+    background: rgba(90, 157, 255, 0.2);
+}
+
+section[aria-labelledby="controlled-tests-title"] article dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 16px;
+}
+
+@media (max-width: 1450px) {
+    section[aria-labelledby="event-history-title"] > form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    section[aria-labelledby="event-history-title"] table {
+        min-width: 900px;
     }
 }

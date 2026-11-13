@@ -43,7 +43,7 @@
             </div>
 
             <dl aria-label="Estado general del sistema">
-                <div><dt>Conexión</dt><dd>En línea</dd></div>
+                <div><dt>Backend</dt><dd>En línea</dd></div>
                 <div><dt>Modo</dt><dd>Automático</dd></div>
                 <div><dt>Fecha</dt><dd><time datetime="2026-11-12">12 de noviembre de 2026</time></dd></div>
                 <div><dt>Hora</dt><dd><time datetime="14:35">14:35</time></dd></div>
@@ -51,6 +51,10 @@
 
             <p role="status">Red degradada</p>
         </header>
+
+        <div class="simulation-banner" role="status" hidden>
+            Modo simulación activo · Los eventos mostrados no corresponden a la operación real
+        </div>
 
         <main>
             <section aria-labelledby="network-status-title">
@@ -161,6 +165,11 @@
                                 </button>
                             </div>
                         </div>
+                        <p class="link-state-legend">
+                            <span>Estable</span>
+                            <span>Señal débil</span>
+                            <span>Sin comunicación</span>
+                        </p>
                     </section>
 
                     <section aria-labelledby="selected-node-title">
@@ -253,5 +262,6 @@
             </section>
         </main>
     </div>
+    <script type="module" src="../js/paginas/comunicaciones.js"></script>
 </body>
 </html>

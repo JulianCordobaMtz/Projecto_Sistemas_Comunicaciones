@@ -42,7 +42,7 @@
             </div>
 
             <dl aria-label="Estado general del sistema">
-                <div><dt>Conexión</dt><dd>En línea</dd></div>
+                <div><dt>Backend</dt><dd>En línea</dd></div>
                 <div><dt>Modo</dt><dd>Automático</dd></div>
                 <div><dt>Fecha</dt><dd><time datetime="2026-11-11">11 de noviembre de 2026</time></dd></div>
                 <div><dt>Hora</dt><dd><time datetime="14:35">14:35</time></dd></div>
@@ -50,6 +50,10 @@
 
             <p role="status">Una emergencia activa</p>
         </header>
+
+        <div class="simulation-banner" role="status" hidden>
+            Modo simulación activo · Los eventos mostrados no corresponden a la operación real
+        </div>
 
         <main>
             <section aria-labelledby="selector-title">
@@ -75,7 +79,7 @@
                     <button type="button" aria-pressed="false">
                         <span>Área 03</span>
                         <strong>Horno sur</strong>
-                        <small>Advertencia · 29.6 °C</small>
+                        <small>Advertencia · Señal débil (−76 dBm)</small>
                     </button>
                 </div>
             </section>
@@ -96,6 +100,7 @@
                             <h3 id="temperature-title">Temperatura</h3>
                         </header>
                         <p><data value="41.8">41.8 °C</data></p>
+                        <small class="value-trend">↑ Aumentando · último dato hace 1 s</small>
                         <dl>
                             <div><dt>Mínima</dt><dd>31.2 °C</dd></div>
                             <div><dt>Promedio</dt><dd>36.7 °C</dd></div>
@@ -110,6 +115,7 @@
                             <h3 id="sensor-title">Sensor KY-026</h3>
                         </header>
                         <p><data value="86">86 %</data></p>
+                        <small class="value-explanation">Lectura normalizada de 0 a 100 % · ↑ aumentando</small>
                         <dl>
                             <div><dt>Nivel</dt><dd>Alto</dd></div>
                             <div><dt>Estado</dt><dd>Fuera de rango</dd></div>
@@ -189,21 +195,27 @@
                             <p>P0 · Atención inmediata</p>
                             <h3>Emergencia activa en horno central</h3>
                         </div>
-                        <strong>Sin atender</strong>
+                        <strong>Activa sin reconocer</strong>
                     </header>
-                    <p>El pulsador de emergencia está activo y la temperatura supera el límite establecido.</p>
                     <dl>
                         <div><dt>Temperatura</dt><dd>41.8 °C</dd></div>
                         <div><dt>Límite</dt><dd>40.0 °C</dd></div>
-                        <div><dt>Duración</dt><dd>42 s</dd></div>
+                        <div><dt>Tiempo activo</dt><dd>42 s</dd></div>
+                        <div><dt>Desde reconocimiento</dt><dd>—</dd></div>
                     </dl>
+                    <ol class="alarm-lifecycle" aria-label="Ciclo de la alarma">
+                        <li aria-current="step">Activa sin reconocer</li>
+                        <li>Reconocida</li>
+                    </ol>
                     <footer>
                         <button type="button">Reconocer incidente</button>
+                        <button type="button">Silenciar sonido</button>
                         <a href="experimentos.html">Consultar historial</a>
                     </footer>
                 </article>
             </section>
         </main>
     </div>
+    <script type="module" src="../js/paginas/monitoreo.js"></script>
 </body>
 </html>
