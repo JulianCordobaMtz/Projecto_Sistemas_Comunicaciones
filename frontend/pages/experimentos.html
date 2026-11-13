@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Historial operativo y pruebas controladas del Sistema de Comunicación Prioritaria.">
+    <title>Pruebas e historial | Sistema de Comunicación Prioritaria</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/componentes.css">
+    <link rel="stylesheet" href="../css/monitoreo.css">
+</head>
+<body>
+    <aside aria-label="Navegación principal">
+        <header>
+            <p aria-hidden="true">SCP</p>
+            <div>
+                <p>Sistema de</p>
+                <p>Comunicación Prioritaria</p>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="../index.html">Dashboard</a></li>
+                <li><a href="monitoreo.html">Monitoreo</a></li>
+                <li><a href="comunicaciones.html">Comunicaciones</a></li>
+                <li><a href="experimentos.html" aria-current="page">Pruebas e historial</a></li>
+            </ul>
+        </nav>
+
+        <footer>
+            <p>Proyecto académico</p>
+            <p>Versión 0.1.0</p>
+        </footer>
+    </aside>
+
+    <div>
+        <header>
+            <div>
+                <p>Registro y validación</p>
+                <h1>Pruebas e historial</h1>
+            </div>
+
+            <dl aria-label="Estado general del sistema">
+                <div><dt>Conexión</dt><dd>En línea</dd></div>
+                <div><dt>Modo</dt><dd>Automático</dd></div>
+                <div><dt>Fecha</dt><dd><time datetime="2026-11-12">12 de noviembre de 2026</time></dd></div>
+                <div><dt>Hora</dt><dd><time datetime="14:35">14:35</time></dd></div>
+            </dl>
+
+            <p role="status">Registro disponible</p>
+        </header>
+
+        <main>
+            <section aria-labelledby="history-navigation-title">
+                <header>
+                    <div>
+                        <p>Consulta del sistema</p>
+                        <h2 id="history-navigation-title">Registro de actividad</h2>
+                    </div>
+                    <p>Datos demostrativos</p>
+                </header>
+
+                <div role="tablist" aria-label="Tipo de registro">
+                    <button type="button" role="tab" aria-selected="true">Historial operativo</button>
+                    <button type="button" role="tab" aria-selected="false">Pruebas controladas</button>
+                </div>
+            </section>
+
+            <section aria-labelledby="history-summary-title">
+                <header>
+                    <div>
+                        <p>Resumen del periodo</p>
+                        <h2 id="history-summary-title">Actividad reciente</h2>
+                    </div>
+                    <p>Últimas 24 horas</p>
+                </header>
+
+                <div>
+                    <article>
+                        <p>Incidentes</p>
+                        <strong><data value="4">4</data></strong>
+                        <small>1 emergencia y 3 alertas</small>
+                    </article>
+                    <article>
+                        <p>Fallos de enlace</p>
+                        <strong><data value="2">2</data></strong>
+                        <small>Ambos recuperados</small>
+                    </article>
+                    <article>
+                        <p>Tiempo medio de atención</p>
+                        <strong><data value="78">1 min 18 s</data></strong>
+                        <small>Desde detección hasta reconocimiento</small>
+                    </article>
+                    <article>
+                        <p>Pruebas ejecutadas</p>
+                        <strong><data value="3">3</data></strong>
+                        <small>Resultados almacenados</small>
+                    </article>
+                </div>
+            </section>
+
+            <section aria-labelledby="event-history-title">
+                <header>
+                    <div>
+                        <p>Eventos registrados</p>
+                        <h2 id="event-history-title">Historial operativo</h2>
+                    </div>
+                    <button type="button">Exportar registro</button>
+                </header>
+
+                <form aria-label="Filtros del historial">
+                    <div>
+                        <label for="event-search">Buscar</label>
+                        <input id="event-search" name="event-search" type="search" placeholder="Área, nodo o descripción">
+                    </div>
+                    <div>
+                        <label for="event-type">Tipo</label>
+                        <select id="event-type" name="event-type">
+                            <option selected>Todos los eventos</option>
+                            <option>Emergencias</option>
+                            <option>Alertas</option>
+                            <option>Comunicaciones</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="event-area">Área</label>
+                        <select id="event-area" name="event-area">
+                            <option selected>Todas las áreas</option>
+                            <option>Área 01 · Horno norte</option>
+                            <option>Área 02 · Horno central</option>
+                            <option>Área 03 · Horno sur</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="event-date">Fecha</label>
+                        <input id="event-date" name="event-date" type="date" value="2026-11-12">
+                    </div>
+                </form>
+
+                <div>
+                    <table>
+                        <caption>Eventos operativos registrados</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha y hora</th>
+                                <th scope="col">Prioridad</th>
+                                <th scope="col">Origen</th>
+                                <th scope="col">Evento</th>
+                                <th scope="col">Duración</th>
+                                <th scope="col">Resultado</th>
+                                <th scope="col">Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><time datetime="2026-11-12T14:34:51-06:00">12/11/2026 · 14:34:51</time></td>
+                                <td><strong>P0</strong></td>
+                                <td>Área 02 · Horno central</td>
+                                <td>Pulsador de emergencia activado</td>
+                                <td>42 s</td>
+                                <td>Atendido</td>
+                                <td><button type="button">Ver</button></td>
+                            </tr>
+                            <tr>
+                                <td><time datetime="2026-11-12T13:18:22-06:00">12/11/2026 · 13:18:22</time></td>
+                                <td><strong>P1</strong></td>
+                                <td>Área 02 · Horno central</td>
+                                <td>Temperatura sobre el límite</td>
+                                <td>2 min 16 s</td>
+                                <td>Normalizado</td>
+                                <td><button type="button">Ver</button></td>
+                            </tr>
+                            <tr>
+                                <td><time datetime="2026-11-12T11:46:05-06:00">12/11/2026 · 11:46:05</time></td>
+                                <td><strong>Red</strong></td>
+                                <td>Nodo 03 · Horno sur</td>
+                                <td>Enlace degradado</td>
+                                <td>4 min 08 s</td>
+                                <td>Recuperado</td>
+                                <td><button type="button">Ver</button></td>
+                            </tr>
+                            <tr>
+                                <td><time datetime="2026-11-12T09:12:37-06:00">12/11/2026 · 09:12:37</time></td>
+                                <td><strong>P1</strong></td>
+                                <td>Área 03 · Horno sur</td>
+                                <td>Nivel de detección fuera de rango</td>
+                                <td>58 s</td>
+                                <td>Normalizado</td>
+                                <td><button type="button">Ver</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <footer>
+                    <p>Mostrando 4 de 4 eventos</p>
+                    <nav aria-label="Paginación del historial">
+                        <button type="button" disabled>Anterior</button>
+                        <button type="button" aria-current="page">1</button>
+                        <button type="button" disabled>Siguiente</button>
+                    </nav>
+                </footer>
+            </section>
+
+            <section aria-labelledby="event-detail-title">
+                <header>
+                    <div>
+                        <p>Evento seleccionado</p>
+                        <h2 id="event-detail-title">Detalle del incidente</h2>
+                    </div>
+                    <strong>Atendido</strong>
+                </header>
+
+                <div>
+                    <article>
+                        <p>P0 · Emergencia</p>
+                        <h3>Pulsador activado en horno central</h3>
+                        <dl>
+                            <div><dt>Inicio</dt><dd>14:34:51</dd></div>
+                            <div><dt>Reconocimiento</dt><dd>14:35:18</dd></div>
+                            <div><dt>Finalización</dt><dd>14:35:33</dd></div>
+                            <div><dt>Duración total</dt><dd>42 s</dd></div>
+                        </dl>
+                    </article>
+
+                    <article>
+                        <h3>Secuencia del evento</h3>
+                        <ol>
+                            <li><time datetime="2026-11-12T14:34:51-06:00">14:34:51</time><span>Emergencia detectada y mensaje P0 generado.</span></li>
+                            <li><time datetime="2026-11-12T14:34:51-06:00">14:34:51</time><span>Mensaje recibido por la estación central.</span></li>
+                            <li><time datetime="2026-11-12T14:35:18-06:00">14:35:18</time><span>Operador reconoce el incidente.</span></li>
+                            <li><time datetime="2026-11-12T14:35:33-06:00">14:35:33</time><span>Condición normalizada y evento cerrado.</span></li>
+                        </ol>
+                    </article>
+                </div>
+            </section>
+
+            <section aria-labelledby="controlled-tests-title">
+                <header>
+                    <div>
+                        <p>Validación académica</p>
+                        <h2 id="controlled-tests-title">Pruebas controladas</h2>
+                    </div>
+                    <p>Entorno de demostración</p>
+                </header>
+
+                <aside>
+                    <strong>Las pruebas se identifican como simulaciones</strong>
+                    <p>Sus resultados se almacenan por separado y no se mezclan con los incidentes operativos.</p>
+                </aside>
+
+                <div>
+                    <article>
+                        <header>
+                            <div>
+                                <p>Prueba 01</p>
+                                <h3>Priorización bajo congestión</h3>
+                            </div>
+                            <strong>Completada</strong>
+                        </header>
+                        <p>Verifica que P0 y P1 sean atendidos antes que la telemetría y los registros.</p>
+                        <dl>
+                            <div><dt>Última ejecución</dt><dd>12/11/2026 · 10:30</dd></div>
+                            <div><dt>Resultado</dt><dd>Correcto</dd></div>
+                        </dl>
+                        <button type="button">Consultar resultado</button>
+                    </article>
+
+                    <article>
+                        <header>
+                            <div>
+                                <p>Prueba 02</p>
+                                <h3>Pérdida temporal de enlace</h3>
+                            </div>
+                            <strong>Completada</strong>
+                        </header>
+                        <p>Comprueba la detección de desconexión, retransmisión y recuperación del nodo.</p>
+                        <dl>
+                            <div><dt>Última ejecución</dt><dd>11/11/2026 · 16:15</dd></div>
+                            <div><dt>Resultado</dt><dd>Correcto</dd></div>
+                        </dl>
+                        <button type="button">Consultar resultado</button>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
