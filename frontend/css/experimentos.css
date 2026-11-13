@@ -1,0 +1,535 @@
+/* Página de pruebas e historial */
+body:has(#history-navigation-title) main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 390px;
+    grid-template-areas:
+        "navigation navigation"
+        "summary summary"
+        "history detail"
+        "tests tests";
+    gap: 22px;
+    max-width: 1660px;
+}
+
+body:has(#history-navigation-title) main > section {
+    min-width: 0;
+    padding: 26px;
+}
+
+body:has(#history-navigation-title) main > section > header {
+    margin-bottom: 22px;
+}
+
+body:has(#history-navigation-title) main > section > header h2 {
+    color: #ffffff;
+    font-size: 1.28rem;
+    font-weight: 800;
+}
+
+body:has(#history-navigation-title) main > section > header > p {
+    color: #dcebf2;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+}
+
+body:has(#history-navigation-title) > div > header > p[role="status"] {
+    color: #d8ffeb;
+    border-color: rgba(57, 217, 138, 0.5);
+    background: rgba(57, 217, 138, 0.11);
+    animation: none;
+}
+
+body:has(#history-navigation-title) main > section[aria-labelledby="history-navigation-title"] {
+    grid-area: navigation;
+}
+
+body:has(#history-navigation-title) main > section[aria-labelledby="history-summary-title"] {
+    grid-area: summary;
+}
+
+body:has(#history-navigation-title) main > section[aria-labelledby="event-history-title"] {
+    grid-area: history;
+}
+
+body:has(#history-navigation-title) main > section[aria-labelledby="event-detail-title"] {
+    grid-area: detail;
+}
+
+body:has(#history-navigation-title) main > section[aria-labelledby="controlled-tests-title"] {
+    grid-area: tests;
+}
+
+/* Selector de vista */
+section[aria-labelledby="history-navigation-title"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+}
+
+section[aria-labelledby="history-navigation-title"] > header {
+    margin-bottom: 0;
+}
+
+section[aria-labelledby="history-navigation-title"] > div[role="tablist"] {
+    display: flex;
+    gap: 7px;
+    padding: 6px;
+    border: 1px solid var(--color-border);
+    border-radius: 11px;
+    background: rgba(7, 16, 24, 0.55);
+}
+
+section[aria-labelledby="history-navigation-title"] button {
+    min-height: 40px;
+    padding: 0 17px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: #bfd2dc;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+section[aria-labelledby="history-navigation-title"] button[aria-selected="true"] {
+    border-color: rgba(36, 200, 219, 0.48);
+    color: #ffffff;
+    background: rgba(36, 200, 219, 0.14);
+}
+
+/* Resumen del periodo */
+section[aria-labelledby="history-summary-title"] > div {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+section[aria-labelledby="history-summary-title"] article {
+    min-height: 145px;
+    padding: 20px;
+    border: 2px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: linear-gradient(145deg, rgba(18, 34, 48, 0.8), rgba(7, 16, 24, 0.72));
+}
+
+section[aria-labelledby="history-summary-title"] article p {
+    color: #c9dce5;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+section[aria-labelledby="history-summary-title"] article strong {
+    display: block;
+    margin-top: 11px;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 1.65rem;
+    line-height: 1.1;
+}
+
+section[aria-labelledby="history-summary-title"] article small {
+    display: block;
+    margin-top: 10px;
+    color: #b9ced8;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+/* Historial y filtros */
+section[aria-labelledby="event-history-title"] {
+    overflow: hidden;
+}
+
+section[aria-labelledby="event-history-title"] > header > button {
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid rgba(36, 200, 219, 0.42);
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(36, 200, 219, 0.12);
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+section[aria-labelledby="event-history-title"] > form {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 0.85fr;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 11px;
+    background: rgba(7, 16, 24, 0.48);
+}
+
+section[aria-labelledby="event-history-title"] form > div {
+    display: grid;
+    gap: 6px;
+}
+
+section[aria-labelledby="event-history-title"] label {
+    color: #d6e6ed;
+    font-size: 0.67rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="event-history-title"] input,
+section[aria-labelledby="event-history-title"] select {
+    min-width: 0;
+    min-height: 40px;
+    padding: 0 11px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    color: #ffffff;
+    background: var(--color-surface);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+}
+
+section[aria-labelledby="event-history-title"] > div {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 11px;
+}
+
+section[aria-labelledby="event-history-title"] table {
+    min-width: 900px;
+    background: rgba(7, 16, 24, 0.45);
+}
+
+section[aria-labelledby="event-history-title"] th,
+section[aria-labelledby="event-history-title"] td {
+    padding: 14px 13px;
+    border-bottom: 1px solid var(--color-border);
+    color: #edf7fb;
+    text-align: left;
+    font-size: 0.7rem;
+}
+
+section[aria-labelledby="event-history-title"] thead th {
+    color: #ffffff;
+    background: rgba(18, 34, 48, 0.88);
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+section[aria-labelledby="event-history-title"] tbody td:first-child,
+section[aria-labelledby="event-history-title"] tbody td:nth-child(5) {
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+section[aria-labelledby="event-history-title"] tbody tr:first-child strong {
+    color: #ffb5bd;
+}
+
+section[aria-labelledby="event-history-title"] tbody tr:nth-child(2) strong,
+section[aria-labelledby="event-history-title"] tbody tr:nth-child(4) strong {
+    color: var(--color-warning);
+}
+
+section[aria-labelledby="event-history-title"] tbody tr:nth-child(3) strong {
+    color: var(--color-primary);
+}
+
+section[aria-labelledby="event-history-title"] tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+section[aria-labelledby="event-history-title"] tbody button {
+    min-height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 7px;
+    color: #ffffff;
+    background: rgba(36, 200, 219, 0.08);
+    font-size: 0.68rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+section[aria-labelledby="event-history-title"] > footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+section[aria-labelledby="event-history-title"] > footer > p {
+    color: #bfd2dc;
+    font-size: 0.7rem;
+}
+
+section[aria-labelledby="event-history-title"] > footer nav {
+    display: flex;
+    gap: 6px;
+}
+
+section[aria-labelledby="event-history-title"] > footer button {
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 7px;
+    color: #ffffff;
+    background: rgba(18, 34, 48, 0.72);
+    font-size: 0.67rem;
+}
+
+section[aria-labelledby="event-history-title"] > footer button:disabled {
+    color: #6f8794;
+    cursor: not-allowed;
+}
+
+/* Panel lateral del evento */
+section[aria-labelledby="event-detail-title"] {
+    align-self: start;
+    border-color: rgba(255, 92, 108, 0.48);
+}
+
+section[aria-labelledby="event-detail-title"] > header > strong {
+    padding: 7px 10px;
+    border-radius: 999px;
+    color: #d8ffeb;
+    background: rgba(57, 217, 138, 0.12);
+    font-size: 0.68rem;
+}
+
+section[aria-labelledby="event-detail-title"] > div {
+    display: grid;
+    gap: 16px;
+}
+
+section[aria-labelledby="event-detail-title"] article {
+    padding: 18px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 11px;
+    background: rgba(7, 16, 24, 0.52);
+}
+
+section[aria-labelledby="event-detail-title"] article:first-child {
+    border-color: rgba(255, 92, 108, 0.5);
+}
+
+section[aria-labelledby="event-detail-title"] article > p {
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+section[aria-labelledby="event-detail-title"] article h3 {
+    margin-top: 5px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+section[aria-labelledby="event-detail-title"] article dl {
+    display: grid;
+    gap: 9px;
+    margin: 18px 0 0;
+}
+
+section[aria-labelledby="event-detail-title"] article dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(143, 167, 181, 0.24);
+}
+
+section[aria-labelledby="event-detail-title"] dt {
+    color: #c5d8e1;
+    font-size: 0.7rem;
+}
+
+section[aria-labelledby="event-detail-title"] dd {
+    margin: 0;
+    color: #ffffff;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="event-detail-title"] ol {
+    display: grid;
+    gap: 0;
+    margin-top: 16px;
+}
+
+section[aria-labelledby="event-detail-title"] li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 12px;
+    padding: 0 0 18px 17px;
+    border-left: 2px solid var(--color-border-strong);
+}
+
+section[aria-labelledby="event-detail-title"] li::before {
+    position: absolute;
+    top: 3px;
+    left: -6px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--color-surface);
+    border-radius: 50%;
+    background: var(--color-primary);
+    content: "";
+}
+
+section[aria-labelledby="event-detail-title"] li:last-child {
+    padding-bottom: 0;
+    border-left-color: transparent;
+}
+
+section[aria-labelledby="event-detail-title"] li time {
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="event-detail-title"] li span {
+    color: #c5d8e1;
+    font-size: 0.7rem;
+}
+
+/* Pruebas controladas */
+section[aria-labelledby="controlled-tests-title"] {
+    border-color: rgba(90, 157, 255, 0.42);
+}
+
+section[aria-labelledby="controlled-tests-title"] > aside {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 18px;
+    padding: 14px 17px;
+    border: 1px solid rgba(90, 157, 255, 0.4);
+    border-radius: 10px;
+    background: rgba(90, 157, 255, 0.08);
+}
+
+section[aria-labelledby="controlled-tests-title"] > aside strong {
+    color: #ffffff;
+    font-size: 0.78rem;
+}
+
+section[aria-labelledby="controlled-tests-title"] > aside p {
+    color: #cfe0ff;
+    font-size: 0.72rem;
+}
+
+section[aria-labelledby="controlled-tests-title"] > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+section[aria-labelledby="controlled-tests-title"] article {
+    padding: 20px;
+    border: 2px solid rgba(90, 157, 255, 0.34);
+    border-radius: var(--radius-md);
+    background: rgba(7, 16, 24, 0.54);
+}
+
+section[aria-labelledby="controlled-tests-title"] article > header {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+section[aria-labelledby="controlled-tests-title"] article header p {
+    color: #cfe0ff;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+section[aria-labelledby="controlled-tests-title"] article h3 {
+    margin-top: 4px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+section[aria-labelledby="controlled-tests-title"] article header strong {
+    color: #d8ffeb;
+    font-size: 0.68rem;
+}
+
+section[aria-labelledby="controlled-tests-title"] article > p {
+    margin-top: 14px;
+    color: #c5d8e1;
+    font-size: 0.76rem;
+}
+
+section[aria-labelledby="controlled-tests-title"] article dl {
+    display: grid;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+section[aria-labelledby="controlled-tests-title"] article dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(143, 167, 181, 0.24);
+}
+
+section[aria-labelledby="controlled-tests-title"] article dt {
+    color: #c5d8e1;
+    font-size: 0.7rem;
+}
+
+section[aria-labelledby="controlled-tests-title"] article dd {
+    margin: 0;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+section[aria-labelledby="controlled-tests-title"] article > button {
+    min-height: 38px;
+    padding: 0 13px;
+    border: 1px solid rgba(90, 157, 255, 0.46);
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(90, 157, 255, 0.13);
+    font-size: 0.72rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+@media (max-width: 1450px) {
+    body:has(#history-navigation-title) main {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "navigation"
+            "summary"
+            "history"
+            "detail"
+            "tests";
+    }
+
+    section[aria-labelledby="history-summary-title"] > div {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
