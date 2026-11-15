@@ -90,7 +90,7 @@ section[aria-labelledby="history-navigation-title"] button {
     color: #bfd2dc;
     background: transparent;
     font-family: var(--font-sans);
-    font-size: 0.78rem;
+    font-size: 0.86rem;
     font-weight: 700;
     cursor: pointer;
 }
@@ -118,7 +118,7 @@ section[aria-labelledby="history-summary-title"] article {
 
 section[aria-labelledby="history-summary-title"] article p {
     color: #c9dce5;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -137,7 +137,7 @@ section[aria-labelledby="history-summary-title"] article small {
     display: block;
     margin-top: 10px;
     color: #b9ced8;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 600;
 }
 
@@ -154,7 +154,7 @@ section[aria-labelledby="event-history-title"] > header > button {
     color: #ffffff;
     background: rgba(36, 200, 219, 0.12);
     font-family: var(--font-sans);
-    font-size: 0.74rem;
+    font-size: 0.82rem;
     font-weight: 800;
     cursor: pointer;
 }
@@ -177,7 +177,7 @@ section[aria-labelledby="event-history-title"] form > div {
 
 section[aria-labelledby="event-history-title"] label {
     color: #d6e6ed;
-    font-size: 0.67rem;
+    font-size: 0.78rem;
     font-weight: 700;
 }
 
@@ -191,7 +191,7 @@ section[aria-labelledby="event-history-title"] select {
     color: #ffffff;
     background: var(--color-surface);
     font-family: var(--font-sans);
-    font-size: 0.72rem;
+    font-size: 0.82rem;
 }
 
 section[aria-labelledby="event-history-title"] > div {
@@ -211,13 +211,13 @@ section[aria-labelledby="event-history-title"] td {
     border-bottom: 1px solid var(--color-border);
     color: #edf7fb;
     text-align: left;
-    font-size: 0.7rem;
+    font-size: 0.82rem;
 }
 
 section[aria-labelledby="event-history-title"] thead th {
     color: #ffffff;
     background: rgba(18, 34, 48, 0.88);
-    font-size: 0.66rem;
+    font-size: 0.74rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -242,6 +242,20 @@ section[aria-labelledby="event-history-title"] tbody tr:nth-child(3) strong {
     color: var(--color-primary);
 }
 
+section[aria-labelledby="event-history-title"] tbody tr[data-prioridad="P0"] strong {
+    color: #ffb5bd;
+}
+
+section[aria-labelledby="event-history-title"] tbody tr[data-prioridad="P1"] strong,
+section[aria-labelledby="event-history-title"] tbody tr[data-prioridad="P2"] strong {
+    color: var(--color-warning);
+}
+
+section[aria-labelledby="event-history-title"] tbody tr[data-prioridad="P3"] strong,
+section[aria-labelledby="event-history-title"] tbody tr[data-prioridad="Red"] strong {
+    color: var(--color-primary);
+}
+
 section[aria-labelledby="event-history-title"] tbody tr:last-child td {
     border-bottom: 0;
 }
@@ -253,7 +267,7 @@ section[aria-labelledby="event-history-title"] tbody button {
     border-radius: 7px;
     color: #ffffff;
     background: rgba(36, 200, 219, 0.08);
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     font-weight: 700;
     cursor: pointer;
 }
@@ -268,7 +282,7 @@ section[aria-labelledby="event-history-title"] > footer {
 
 section[aria-labelledby="event-history-title"] > footer > p {
     color: #bfd2dc;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
 }
 
 section[aria-labelledby="event-history-title"] > footer nav {
@@ -283,7 +297,7 @@ section[aria-labelledby="event-history-title"] > footer button {
     border-radius: 7px;
     color: #ffffff;
     background: rgba(18, 34, 48, 0.72);
-    font-size: 0.67rem;
+    font-size: 0.76rem;
 }
 
 section[aria-labelledby="event-history-title"] > footer button:disabled {
@@ -302,7 +316,7 @@ section[aria-labelledby="event-detail-title"] > header > strong {
     border-radius: 999px;
     color: #d8ffeb;
     background: rgba(57, 217, 138, 0.12);
-    font-size: 0.68rem;
+    font-size: 0.78rem;
 }
 
 section[aria-labelledby="event-detail-title"] > div {
@@ -324,7 +338,7 @@ section[aria-labelledby="event-detail-title"] article:first-child {
 section[aria-labelledby="event-detail-title"] article > p {
     color: #ffffff;
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 800;
     text-transform: uppercase;
 }
@@ -332,7 +346,7 @@ section[aria-labelledby="event-detail-title"] article > p {
 section[aria-labelledby="event-detail-title"] article h3 {
     margin-top: 5px;
     color: #ffffff;
-    font-size: 1rem;
+    font-size: 1.12rem;
     font-weight: 800;
 }
 
@@ -352,7 +366,7 @@ section[aria-labelledby="event-detail-title"] article dl > div {
 
 section[aria-labelledby="event-detail-title"] dt {
     color: #c5d8e1;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
 }
 
 section[aria-labelledby="event-detail-title"] dd {
@@ -360,7 +374,7 @@ section[aria-labelledby="event-detail-title"] dd {
     color: #ffffff;
     text-align: right;
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 700;
 }
 
@@ -399,13 +413,13 @@ section[aria-labelledby="event-detail-title"] li:last-child {
 section[aria-labelledby="event-detail-title"] li time {
     color: #ffffff;
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     font-weight: 700;
 }
 
 section[aria-labelledby="event-detail-title"] li span {
     color: #c5d8e1;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
 }
 
 /* Pruebas controladas */
@@ -551,7 +565,7 @@ section[aria-labelledby="controlled-tests-title"] article > button {
 
 .test-comparison > div[role="img"] {
     display: grid;
-    min-height: 105px;
+    min-height: 220px;
     place-items: center;
     margin-top: 10px;
     border: 1px dashed var(--color-border-strong);
@@ -560,6 +574,12 @@ section[aria-labelledby="controlled-tests-title"] article > button {
     text-align: center;
     font-family: var(--font-mono);
     font-size: 0.68rem;
+}
+
+.test-chart {
+    display: block;
+    width: 100%;
+    height: 210px;
 }
 
 /* Filtros compactos y tabla legible sin perder la última columna */

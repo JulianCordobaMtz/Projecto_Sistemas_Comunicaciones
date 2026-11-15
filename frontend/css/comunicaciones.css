@@ -12,15 +12,15 @@ body:has(#network-status-title) main > section {
 }
 
 body:has(#network-status-title) section[aria-labelledby="network-console-title"] {
-    order: 1;
+    order: 3;
 }
 
 body:has(#network-status-title) section[aria-labelledby="network-status-title"] {
-    order: 2;
+    order: 1;
 }
 
 body:has(#network-status-title) section[aria-labelledby="congestion-title"] {
-    order: 3;
+    order: 2;
 }
 
 body:has(#network-status-title) section[aria-labelledby="channel-trend-title"] {

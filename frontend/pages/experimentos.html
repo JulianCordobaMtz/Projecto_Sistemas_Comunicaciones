@@ -67,12 +67,12 @@
                 </header>
 
                 <div role="tablist" aria-label="Tipo de registro">
-                    <button type="button" role="tab" aria-selected="true">Historial operativo</button>
-                    <button type="button" role="tab" aria-selected="false">Pruebas controladas</button>
+                    <button id="history-tab" type="button" role="tab" aria-selected="true" aria-controls="history-view">Historial operativo</button>
+                    <button id="tests-tab" type="button" role="tab" aria-selected="false" aria-controls="controlled-tests-title">Pruebas controladas</button>
                 </div>
             </section>
 
-            <section aria-labelledby="history-summary-title">
+            <section id="history-view" aria-labelledby="history-summary-title">
                 <header>
                     <div>
                         <p>Resumen del periodo</p>
@@ -105,7 +105,7 @@
                 </div>
             </section>
 
-            <section aria-labelledby="event-history-title">
+            <section aria-labelledby="event-history-title" data-history-panel>
                 <header>
                     <div>
                         <p>Eventos registrados</p>
@@ -123,11 +123,11 @@
                         <label for="event-priority">Prioridad</label>
                         <select id="event-priority" name="event-priority">
                             <option selected>Todas</option>
-                            <option>P0</option>
-                            <option>P1</option>
-                            <option>P2</option>
-                            <option>P3</option>
-                            <option>Red</option>
+                            <option value="P0">Emergencia (P0)</option>
+                            <option value="P1">Alerta crítica (P1)</option>
+                            <option value="P2">Advertencia (P2)</option>
+                            <option value="P3">Informativo (P3)</option>
+                            <option value="Red">Fallo de red</option>
                         </select>
                     </div>
                     <div>
@@ -214,7 +214,7 @@
                 </footer>
             </section>
 
-            <section aria-labelledby="event-detail-title">
+            <section aria-labelledby="event-detail-title" data-history-panel>
                 <header>
                     <div>
                         <p>Evento seleccionado</p>
@@ -271,13 +271,13 @@
                             </div>
                             <strong>Completada</strong>
                         </header>
-                        <p>Verifica que P0 y P1 sean atendidos antes que la telemetría y los registros.</p>
+                        <p>Verifica que las emergencias y alertas críticas sean atendidas antes que las advertencias y los registros informativos.</p>
                         <dl>
                             <div><dt>Última ejecución</dt><dd>12/11/2026 · 10:30</dd></div>
                             <div><dt>Resultado</dt><dd>Correcto</dd></div>
-                            <div><dt>Latencia P0 / P1</dt><dd>18 ms / 34 ms</dd></div>
-                            <div><dt>Latencia P2 / P3</dt><dd>92 ms / 180 ms</dd></div>
-                            <div><dt>Descartados</dt><dd>P0: 0 · P1: 0 · P2: 2 · P3: 5</dd></div>
+                            <div><dt>Emergencia / Alerta crítica</dt><dd>18 ms / 34 ms</dd></div>
+                            <div><dt>Advertencia / Informativo</dt><dd>92 ms / 180 ms</dd></div>
+                            <div><dt>Mensajes descartados</dt><dd>Emergencia: 0 · Crítica: 0 · Advertencia: 2 · Informativo: 5</dd></div>
                         </dl>
                         <figure class="test-comparison">
                             <figcaption>Comparación de latencia con y sin priorización</figcaption>

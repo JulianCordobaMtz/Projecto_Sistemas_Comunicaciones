@@ -84,38 +84,9 @@ const crearGraficaTemporal = ({ historial, minimo, maximo, unidad, nombres, etiq
     `;
 };
 
-const crearGraficaPrioridades = (incidentes) => {
-    const prioridades = ["P0", "P1", "P2", "P3"];
-    const nombres = ["Emergencia", "Alerta crítica", "Advertencia", "Informativo"];
-    const valores = prioridades.map((prioridad) =>
-        incidentes.filter((incidente) => incidente.prioridad === prioridad).length
-    );
-    const colores = ["#ff6577", "#f4b942", "#24c8db", "#8ea0aa"];
-    const maximo = Math.max(2, ...valores);
-
-    const barras = valores.map((valor, indice) => {
-        const x = 45 + indice * 88;
-        const altura = (valor / maximo) * 105;
-        const y = 132 - altura;
-        return `
-            <rect x="${x}" y="${y}" width="54" height="${altura}" rx="5" fill="${colores[indice]}" opacity="0.9" />
-            <text x="${x + 27}" y="${Math.max(18, y - 8)}" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700">${valor}</text>
-            <text x="${x + 27}" y="151" text-anchor="middle" fill="#f4f7fb" font-size="10" font-weight="700">${nombres[indice]}</text>
-            <text x="${x + 27}" y="166" text-anchor="middle" fill="#a9bbc5" font-size="9">${prioridades[indice]}</text>
-        `;
-    }).join("");
-
-    return `
-        <svg class="chart-svg" viewBox="0 0 390 180" role="img" aria-label="Mensajes agrupados como emergencia, alerta crítica, advertencia e informativo">
-            <line x1="27" y1="132" x2="377" y2="132" stroke="#466172" stroke-width="1" />
-            ${barras}
-        </svg>
-    `;
-};
-
-export const actualizarGraficasDashboard = ({ hornos, incidentes }, ahora = new Date()) => {
+export const actualizarGraficasDashboard = ({ hornos }, ahora = new Date()) => {
     const contenedores = document.querySelectorAll("section[aria-labelledby='charts-title'] figure > div[role='img']");
-    if (contenedores.length < 3) return;
+    if (contenedores.length < 2) return;
 
     agregarMuestra(historialTemperatura, hornos.map(({ lectura }) => lectura.temperatura), ahora);
     agregarMuestra(historialKy026, hornos.map(({ lectura }) => lectura.ky026), ahora);
@@ -137,5 +108,4 @@ export const actualizarGraficasDashboard = ({ hornos, incidentes }, ahora = new 
         nombres,
         etiqueta: "Lecturas KY-026 de los tres hornos durante los últimos segundos"
     });
-    contenedores[2].innerHTML = crearGraficaPrioridades(incidentes);
 };
