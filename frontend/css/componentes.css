@@ -1136,8 +1136,10 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
 
 .priority-summary > div {
     display: flex;
+    min-height: 54px;
+    flex-direction: column;
     justify-content: space-between;
-    gap: 8px;
+    gap: 3px;
     padding: 7px 8px;
     border: 1px solid var(--color-border);
     border-radius: 7px;
@@ -1149,8 +1151,13 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
     margin: 0;
     color: #ffffff;
     font-family: var(--font-mono);
-    font-size: 0.67rem;
+    font-size: 0.64rem;
     font-weight: 700;
+}
+
+.priority-summary dt {
+    color: #d9f9ff;
+    font-family: var(--font-sans);
 }
 
 .data-stale {

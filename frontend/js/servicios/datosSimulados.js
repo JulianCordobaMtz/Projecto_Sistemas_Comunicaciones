@@ -113,3 +113,47 @@ export const obtenerNodo = (nodoId) =>
 
 export const obtenerIncidentesActivos = () =>
     estadoSistema.incidentes.filter(({ estado }) => estado !== "resuelto");
+
+const limitar = (valor, minimo, maximo) =>
+    Math.min(maximo, Math.max(minimo, valor));
+
+const redondear = (valor, decimales = 1) =>
+    Number(valor.toFixed(decimales));
+
+export const obtenerInstantaneaSistema = (ahora = new Date()) => {
+    const segundos = ahora.getTime() / 1000;
+
+    const hornos = estadoSistema.hornos.map((horno, indice) => {
+        const variacionTemperatura = Math.sin(segundos / 18 + indice) * 0.35;
+        const variacionKy = Math.sin(segundos / 12 + indice * 1.4) * 2;
+
+        return {
+            ...horno,
+            lectura: {
+                ...horno.lectura,
+                temperatura: redondear(horno.lectura.temperatura + variacionTemperatura),
+                ky026: Math.round(limitar(horno.lectura.ky026 + variacionKy, 0, 100))
+            }
+        };
+    });
+
+    const nodos = estadoSistema.nodos.map((nodo, indice) => ({
+        ...nodo,
+        rssi: Math.round(nodo.rssi + Math.sin(segundos / 10 + indice)),
+        latencia: Math.max(1, Math.round(nodo.latencia + Math.sin(segundos / 8 + indice) * 3)),
+        ultimoDato: new Date(ahora.getTime() - nodo.ultimoPaquete * 1000).toISOString()
+    }));
+
+    const incidentes = estadoSistema.incidentes.map((incidente, indice) => ({
+        ...incidente,
+        inicio: new Date(ahora.getTime() - (indice === 0 ? 42 : 67) * 1000).toISOString()
+    }));
+
+    return {
+        conexion: estadoSistema.conexion,
+        modo: estadoSistema.modo,
+        hornos,
+        nodos,
+        incidentes
+    };
+};

@@ -45,7 +45,7 @@ const actualizarReloj = () => {
 };
 
 export const inicializarEncabezado = ({ conexion, modo }) => {
-    actualizarCampoTexto("conexión", conexion);
+    actualizarCampoTexto("backend", conexion);
     actualizarCampoTexto("modo", modo);
     actualizarReloj();
 
