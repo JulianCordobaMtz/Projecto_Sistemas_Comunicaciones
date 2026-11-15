@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard del Sistema de Comunicación Prioritaria para monitorear hornos, emergencias y enlaces de comunicación.">
+    <title>Centro de Control | Sistema de Comunicación Prioritaria</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/componentes.css">
+    <link rel="stylesheet" href="css/monitoreo.css">
+</head>
+<body>
+    <aside aria-label="Navegación principal">
+        <header>
+            <p aria-hidden="true">SCP</p>
+            <div>
+                <p>Sistema de</p>
+                <p>Comunicación Prioritaria</p>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="index.html" aria-current="page">Dashboard</a></li>
+                <li><a href="pages/monitoreo.html">Monitoreo</a></li>
+                <li><a href="pages/comunicaciones.html">Comunicaciones</a></li>
+                <li><a href="pages/experimentos.html">Pruebas e historial</a></li>
+            </ul>
+        </nav>
+
+        <footer>
+            <p>Proyecto académico</p>
+            <p>Versión 0.1.0</p>
+        </footer>
+    </aside>
+
+    <div>
+        <header>
+            <div>
+                <p>Centro de control</p>
+                <h1>Monitoreo general</h1>
+            </div>
+
+            <dl aria-label="Estado general del sistema">
+                <div>
+                    <dt>Backend</dt>
+                    <dd>En línea</dd>
+                </div>
+                <div>
+                    <dt>Modo</dt>
+                    <dd>Automático</dd>
+                </div>
+                <div>
+                    <dt>Fecha</dt>
+                    <dd><time datetime="2026-11-11">11 de noviembre de 2026</time></dd>
+                </div>
+                <div>
+                    <dt>Hora</dt>
+                    <dd><time datetime="14:35">14:35</time></dd>
+                </div>
+            </dl>
+
+            <p role="status">Una emergencia activa</p>
+        </header>
+
+        <div class="simulation-banner" role="status" hidden>
+            Modo simulación activo · Los eventos mostrados no corresponden a la operación real
+        </div>
+
+        <main>
+            <section aria-labelledby="areas-title">
+                <header>
+                    <div>
+                        <p>Vista en tiempo real</p>
+                        <h2 id="areas-title">Áreas de operación</h2>
+                    </div>
+                    <p>Última actualización: <time datetime="2026-11-11T14:35:08-06:00">14:35:08</time></p>
+                </header>
+
+                <div aria-label="Esquema de las tres áreas monitoreadas">
+                    <article aria-labelledby="area-1-title">
+                        <header>
+                            <div>
+                                <p>Área 01</p>
+                                <h3 id="area-1-title">Horno norte</h3>
+                            </div>
+                            <p>Normal</p>
+                        </header>
+
+                        <figure class="horno-visual">
+                            <svg viewBox="0 0 240 132" role="img" aria-label="Representación esquemática del horno">
+                                <rect class="horno-conexion horno-conexion--fria" x="36" y="82" width="24" height="12" rx="2" />
+                                <rect class="horno-conexion horno-conexion--caliente" x="180" y="82" width="24" height="12" rx="2" />
+                                <rect class="horno-chimenea" x="98" y="7" width="44" height="34" rx="2" />
+                                <path class="horno-campana" d="M98 39h44l36 28H62Z" />
+                                <rect class="horno-cuerpo" x="56" y="64" width="128" height="61" rx="4" />
+                                <rect class="horno-camara" x="64" y="71" width="112" height="45" rx="2" />
+                                <path class="horno-llama-exterior" d="M69 113c7-9 5-17 11-27 3 8 8 11 12 16 1-13 9-22 17-31 0 14 8 20 12 30 4-11 10-19 18-27 0 13 7 18 10 28 4-7 10-12 15-20 0 13 8 20 7 31Z" />
+                                <path class="horno-llama-interior" d="M82 113c5-6 5-12 8-18 4 5 7 8 9 13 2-10 7-16 12-23 1 10 7 15 9 23 4-8 8-13 13-19 1 9 6 13 8 20 4-5 8-8 12-13 0 7 4 12 5 17Z" />
+                                <g class="horno-alerta" aria-hidden="true">
+                                    <path class="horno-alerta-fondo" d="M168 72l12 21h-24Z" />
+                                    <path class="horno-alerta-signo" d="M168 78v7M168 89v1" />
+                                </g>
+                                <path class="horno-base" d="M66 125v4M174 125v4" />
+                            </svg>
+                        </figure>
+
+                        <dl>
+                            <div><dt>Temperatura</dt><dd><data value="32.4">32.4 °C</data></dd></div>
+                            <div><dt>Sensor KY-026</dt><dd><data value="18">18 % · Nivel bajo</data></dd></div>
+                            <div><dt>Emergencia</dt><dd>No activa</dd></div>
+                            <div><dt>Enlace</dt><dd>Conectado · −58 dBm</dd></div>
+                            <div><dt>Último dato</dt><dd><time datetime="2026-11-12T14:35:07-06:00">Hace 1 s · 14:35:07</time></dd></div>
+                        </dl>
+                    </article>
+
+                    <article aria-labelledby="area-2-title">
+                        <header>
+                            <div>
+                                <p>Área 02</p>
+                                <h3 id="area-2-title">Horno central</h3>
+                            </div>
+                            <p>Crítico</p>
+                        </header>
+
+                        <figure class="horno-visual">
+                            <svg viewBox="0 0 240 132" role="img" aria-label="Representación esquemática del horno">
+                                <rect class="horno-conexion horno-conexion--fria" x="36" y="82" width="24" height="12" rx="2" />
+                                <rect class="horno-conexion horno-conexion--caliente" x="180" y="82" width="24" height="12" rx="2" />
+                                <rect class="horno-chimenea" x="98" y="7" width="44" height="34" rx="2" />
+                                <path class="horno-campana" d="M98 39h44l36 28H62Z" />
+                                <rect class="horno-cuerpo" x="56" y="64" width="128" height="61" rx="4" />
+                                <rect class="horno-camara" x="64" y="71" width="112" height="45" rx="2" />
+                                <path class="horno-llama-exterior" d="M69 113c7-9 5-17 11-27 3 8 8 11 12 16 1-13 9-22 17-31 0 14 8 20 12 30 4-11 10-19 18-27 0 13 7 18 10 28 4-7 10-12 15-20 0 13 8 20 7 31Z" />
+                                <path class="horno-llama-interior" d="M82 113c5-6 5-12 8-18 4 5 7 8 9 13 2-10 7-16 12-23 1 10 7 15 9 23 4-8 8-13 13-19 1 9 6 13 8 20 4-5 8-8 12-13 0 7 4 12 5 17Z" />
+                                <g class="horno-alerta" aria-hidden="true">
+                                    <path class="horno-alerta-fondo" d="M168 72l12 21h-24Z" />
+                                    <path class="horno-alerta-signo" d="M168 78v7M168 89v1" />
+                                </g>
+                                <path class="horno-base" d="M66 125v4M174 125v4" />
+                            </svg>
+                        </figure>
+
+                        <dl>
+                            <div><dt>Temperatura</dt><dd><data value="41.8">41.8 °C</data></dd></div>
+                            <div><dt>Sensor KY-026</dt><dd><data value="86">86 % · Nivel alto</data></dd></div>
+                            <div><dt>Emergencia</dt><dd>Activa</dd></div>
+                            <div><dt>Enlace</dt><dd>Conectado · −61 dBm</dd></div>
+                            <div><dt>Último dato</dt><dd><time datetime="2026-11-12T14:35:06-06:00">Hace 2 s · 14:35:06</time></dd></div>
+                        </dl>
+                    </article>
+
+                    <article aria-labelledby="area-3-title">
+                        <header>
+                            <div>
+                                <p>Área 03</p>
+                                <h3 id="area-3-title">Horno sur</h3>
+                            </div>
+                            <p>Advertencia · Señal débil (−76 dBm)</p>
+                        </header>
+
+                        <figure class="horno-visual">
+                            <svg viewBox="0 0 240 132" role="img" aria-label="Representación esquemática del horno">
+                                <rect class="horno-conexion horno-conexion--fria" x="36" y="82" width="24" height="12" rx="2" />
+                                <rect class="horno-conexion horno-conexion--caliente" x="180" y="82" width="24" height="12" rx="2" />
+                                <rect class="horno-chimenea" x="98" y="7" width="44" height="34" rx="2" />
+                                <path class="horno-campana" d="M98 39h44l36 28H62Z" />
+                                <rect class="horno-cuerpo" x="56" y="64" width="128" height="61" rx="4" />
+                                <rect class="horno-camara" x="64" y="71" width="112" height="45" rx="2" />
+                                <path class="horno-llama-exterior" d="M69 113c7-9 5-17 11-27 3 8 8 11 12 16 1-13 9-22 17-31 0 14 8 20 12 30 4-11 10-19 18-27 0 13 7 18 10 28 4-7 10-12 15-20 0 13 8 20 7 31Z" />
+                                <path class="horno-llama-interior" d="M82 113c5-6 5-12 8-18 4 5 7 8 9 13 2-10 7-16 12-23 1 10 7 15 9 23 4-8 8-13 13-19 1 9 6 13 8 20 4-5 8-8 12-13 0 7 4 12 5 17Z" />
+                                <g class="horno-alerta" aria-hidden="true">
+                                    <path class="horno-alerta-fondo" d="M168 72l12 21h-24Z" />
+                                    <path class="horno-alerta-signo" d="M168 78v7M168 89v1" />
+                                </g>
+                                <path class="horno-base" d="M66 125v4M174 125v4" />
+                            </svg>
+                        </figure>
+
+                        <dl>
+                            <div><dt>Temperatura</dt><dd><data value="29.6">29.6 °C</data></dd></div>
+                            <div><dt>Sensor KY-026</dt><dd><data value="34">34 % · Nivel medio</data></dd></div>
+                            <div><dt>Emergencia</dt><dd>No activa</dd></div>
+                            <div><dt>Enlace</dt><dd>Señal débil · −76 dBm</dd></div>
+                            <div><dt>Último dato</dt><dd><time datetime="2026-11-12T14:35:03-06:00">Hace 5 s · 14:35:03</time></dd></div>
+                        </dl>
+                    </article>
+                </div>
+            </section>
+
+            <aside class="incident-panel" aria-labelledby="incidents-title">
+                <header>
+                    <div>
+                        <p>Seguridad operativa</p>
+                        <h2 id="incidents-title">Incidentes activos</h2>
+                    </div>
+                    <p><data value="2">2 incidentes</data></p>
+                </header>
+
+                <div class="incident-empty" hidden>
+                    <strong>Sin incidentes activos</strong>
+                    <p>La operación se encuentra dentro de los parámetros establecidos.</p>
+                </div>
+
+                <div class="incident-list">
+                <section class="emergency-card" role="alert" aria-labelledby="emergency-title">
+                    <header>
+                        <span class="emergency-icon" aria-hidden="true">
+                            <svg viewBox="0 0 48 48">
+                                <path d="M24 4 45 42H3Z" />
+                                <path d="M24 16v13M24 35v1" />
+                            </svg>
+                        </span>
+                        <div>
+                            <p>P0 · Atención inmediata</p>
+                            <h3 id="emergency-title">Emergencia activa</h3>
+                        </div>
+                        <time datetime="2026-11-11T14:34:51-06:00">14:34:51</time>
+                    </header>
+
+                    <div class="emergency-location">
+                        <span>Área 02</span>
+                        <strong>Horno central</strong>
+                    </div>
+
+                    <dl>
+                        <div>
+                            <dt>Prioridad</dt>
+                            <dd>P0</dd>
+                        </div>
+                        <div>
+                            <dt>Estado</dt>
+                            <dd>Sin atender</dd>
+                        </div>
+                    </dl>
+
+                    <a href="pages/monitoreo.html">Abrir protocolo de atención</a>
+                </section>
+
+                <section class="alert-card" aria-labelledby="active-alert-title">
+                    <header>
+                        <div>
+                            <p>P1 · Alerta crítica</p>
+                            <h3 id="active-alert-title">Temperatura sobre el límite</h3>
+                        </div>
+                        <time datetime="2026-11-11T14:34:26-06:00">14:34:26</time>
+                    </header>
+
+                    <p>Temperatura fuera del rango permitido.</p>
+
+                    <div>
+                        <span>Área 02 · Horno central</span>
+                        <strong>41.8 °C / límite 40 °C</strong>
+                    </div>
+                </section>
+                </div>
+
+                <footer class="incident-panel-footer">
+                    <p>Este panel muestra únicamente emergencias y alertas que requieren intervención.</p>
+                    <a href="pages/experimentos.html">Ver historial de incidentes</a>
+                </footer>
+            </aside>
+
+            <section aria-labelledby="charts-title">
+                <header>
+                    <div>
+                        <p>Últimos 30 segundos</p>
+                        <h2 id="charts-title">Tendencias del sistema</h2>
+                    </div>
+                    <p>Datos demostrativos</p>
+                </header>
+
+                <div>
+                    <figure aria-labelledby="temperature-chart-title">
+                        <figcaption>
+                            <h3 id="temperature-chart-title">Temperatura por área</h3>
+                            <p>Evolución térmica de los tres hornos</p>
+                        </figcaption>
+                        <div role="img" aria-label="Espacio reservado para la gráfica de temperatura de las áreas 1, 2 y 3.">
+                            Gráfica de temperatura pendiente de implementación
+                        </div>
+                    </figure>
+
+                    <figure aria-labelledby="ky-chart-title">
+                        <figcaption>
+                            <h3 id="ky-chart-title">Lecturas del sensor KY-026</h3>
+                            <p>Nivel de detección registrado en cada área</p>
+                        </figcaption>
+                        <div role="img" aria-label="Espacio reservado para la gráfica de lecturas de los sensores KY-026.">
+                            Gráfica del sensor KY-026 pendiente de implementación
+                        </div>
+                    </figure>
+
+                    <figure aria-labelledby="events-chart-title">
+                        <figcaption>
+                            <h3 id="events-chart-title">Cola actual de mensajes</h3>
+                            <p>Mensajes pendientes y tiempo promedio de procesamiento</p>
+                        </figcaption>
+                        <dl class="priority-summary">
+                            <div><dt>Emergencia (P0)</dt><dd>0 en cola · 18 ms</dd></div>
+                            <div><dt>Alerta crítica (P1)</dt><dd>0 en cola · 34 ms</dd></div>
+                            <div><dt>Advertencia (P2)</dt><dd>3 en cola · 92 ms</dd></div>
+                            <div><dt>Informativo (P3)</dt><dd>6 en cola · 180 ms</dd></div>
+                        </dl>
+                    </figure>
+                </div>
+            </section>
+
+            <section aria-labelledby="communications-title">
+                <header>
+                    <div>
+                        <p>Diagnóstico de red</p>
+                        <h2 id="communications-title">Estado de comunicaciones</h2>
+                    </div>
+                    <a href="pages/comunicaciones.html">Ver diagnóstico completo</a>
+                </header>
+
+                <table>
+                    <caption>Calidad de los enlaces de comunicación por nodo</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Nodo</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">RSSI</th>
+                            <th scope="col">Latencia</th>
+                            <th scope="col">Pérdidas</th>
+                            <th scope="col">Retransmisiones</th>
+                            <th scope="col">Último paquete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Nodo 01 · Horno norte</th>
+                            <td>Estable</td>
+                            <td>−58 dBm</td>
+                            <td>25 ms</td>
+                            <td>0.0 %</td>
+                            <td>0</td>
+                            <td><time datetime="2026-11-11T14:35:07-06:00">Hace 1 s</time></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nodo 02 · Horno central</th>
+                            <td>Estable</td>
+                            <td>−61 dBm</td>
+                            <td>31 ms</td>
+                            <td>0.8 %</td>
+                            <td>1</td>
+                            <td><time datetime="2026-11-11T14:35:06-06:00">Hace 2 s</time></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nodo 03 · Horno sur</th>
+                            <td>Degradado</td>
+                            <td>−76 dBm</td>
+                            <td>75 ms</td>
+                            <td>3.4 %</td>
+                            <td>4</td>
+                            <td><time datetime="2026-11-11T14:35:03-06:00">Hace 5 s</time></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="js/paginas/dashboard.js"></script>
+</body>
+</html>
