@@ -1,6 +1,8 @@
 const crearLectura = (temperatura, ky026, estado = "normal") =>
     Object.freeze({ temperatura, ky026, estado });
 
+const INICIO_SIMULACION = Date.now();
+
 export const estadoSistema = Object.freeze({
     conexion: "En línea",
     modo: "Automático",
@@ -146,7 +148,7 @@ export const obtenerInstantaneaSistema = (ahora = new Date()) => {
 
     const incidentes = estadoSistema.incidentes.map((incidente, indice) => ({
         ...incidente,
-        inicio: new Date(ahora.getTime() - (indice === 0 ? 42 : 67) * 1000).toISOString()
+        inicio: new Date(INICIO_SIMULACION - (indice === 0 ? 42 : 67) * 1000).toISOString()
     }));
 
     return {

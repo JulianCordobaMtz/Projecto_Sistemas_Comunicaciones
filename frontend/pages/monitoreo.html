@@ -150,9 +150,9 @@
                     <form>
                         <label for="time-range">Intervalo</label>
                         <select id="time-range" name="time-range">
-                            <option>Últimos 15 minutos</option>
-                            <option selected>Últimos 30 minutos</option>
-                            <option>Última hora</option>
+                            <option value="15">Últimos 15 segundos</option>
+                            <option value="30" selected>Últimos 30 segundos</option>
+                            <option value="60">Últimos 60 segundos</option>
                         </select>
                     </form>
                 </header>
@@ -213,6 +213,10 @@
                         <a href="experimentos.html">Consultar historial</a>
                     </footer>
                 </article>
+                <div class="incident-empty" hidden>
+                    <strong>Sin incidentes activos</strong>
+                    <p>El horno seleccionado opera sin alarmas que requieran atención.</p>
+                </div>
             </section>
         </main>
     </div>
