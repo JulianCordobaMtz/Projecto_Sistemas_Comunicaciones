@@ -2,6 +2,7 @@ import express from "express";
 import { configuracion } from "./configuracion.js";
 import { estadoSistema } from "./servicios/estadoSistema.js";
 import { validarTelemetria } from "./validadores/telemetria.js";
+import { validarModo } from "./validadores/modo.js";
 
 export const crearApp = () => {
     const app = express();
@@ -19,6 +20,16 @@ export const crearApp = () => {
     app.get("/api/hornos", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerHornos()));
     app.get("/api/nodos", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerNodos()));
     app.get("/api/incidentes", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerIncidentes()));
+    app.get("/api/modo", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerModo()));
+    app.patch("/api/modo", (solicitud, respuesta, siguiente) => {
+        try {
+            const modo = validarModo(solicitud.body);
+            const estado = estadoSistema.cambiarModo(modo);
+            respuesta.json({ mensaje: `Modo cambiado a ${estado.sistema.modo}`, estado });
+        } catch (error) {
+            siguiente(error);
+        }
+    });
     app.post("/api/telemetria", (solicitud, respuesta, siguiente) => {
         try {
             const telemetria = validarTelemetria(solicitud.body);

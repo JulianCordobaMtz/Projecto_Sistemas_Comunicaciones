@@ -28,6 +28,29 @@ class EstadoSistema extends EventEmitter {
         return structuredClone(this.#estado.incidentes);
     }
 
+    obtenerModo() {
+        return {
+            modo: this.#simulacionActiva ? "simulacion" : "datos-externos",
+            etiqueta: this.#estado.sistema.modo,
+            simulacionActiva: this.#simulacionActiva
+        };
+    }
+
+    cambiarModo(modo) {
+        this.#simulacionActiva = modo === "simulacion";
+        this.#estado.sistema.modo = this.#simulacionActiva ? "Simulación" : "Datos externos";
+        this.#estado.sistema.actualizadoEn = new Date().toISOString();
+
+        if (this.#simulacionActiva) {
+            this.#estado.nodos = this.#estado.nodos.map((nodo) => ({
+                ...nodo,
+                ultimoDato: this.#estado.sistema.actualizadoEn
+            }));
+        }
+
+        return this.#publicarActualizacion();
+    }
+
     actualizarTelemetria(telemetria) {
         const indiceNodo = this.#estado.nodos.findIndex(({ id }) => id === telemetria.nodoId);
         if (indiceNodo === -1) {
