@@ -3,6 +3,7 @@ import { WebSocket, WebSocketServer } from "ws";
 import { crearApp } from "./app.js";
 import { configuracion } from "./configuracion.js";
 import { estadoSistema } from "./servicios/estadoSistema.js";
+import { colaPrioridad } from "./servicios/colaPrioridad.js";
 
 const servidor = createServer(crearApp());
 const websocket = new WebSocketServer({ server: servidor, path: "/ws" });
@@ -19,6 +20,9 @@ estadoSistema.on("actualizacion", (estado) => {
     websocket.clients.forEach((cliente) => enviar(cliente, "actualizacion_sistema", estado));
 });
 
+colaPrioridad.on("actualizacion", (resumen) => estadoSistema.actualizarCola(resumen));
+colaPrioridad.iniciar(configuracion.intervaloProcesamiento);
+
 const temporizador = setInterval(() => {
     estadoSistema.simularSiguienteLectura();
 }, configuracion.intervaloSimulacion);
@@ -31,6 +35,7 @@ servidor.listen(configuracion.puerto, () => {
 const cerrar = (senal) => {
     console.log(`Cerrando servidor por ${senal}...`);
     clearInterval(temporizador);
+    colaPrioridad.detener();
     websocket.close(() => servidor.close(() => process.exit(0)));
 };
 

@@ -34,10 +34,10 @@ export const crearEstadoInicial = () => {
             { id: "incidente-002", prioridad: "P1", tipo: "alerta", hornoId: "horno-central", titulo: "Temperatura sobre el límite", estado: "activo", inicio: new Date(ahora.getTime() - 67000).toISOString() }
         ],
         cola: [
-            { prioridad: "P0", nombre: "Emergencia", pendientes: 0, latenciaPromedio: 18 },
-            { prioridad: "P1", nombre: "Alerta crítica", pendientes: 0, latenciaPromedio: 34 },
-            { prioridad: "P2", nombre: "Advertencia", pendientes: 3, latenciaPromedio: 92 },
-            { prioridad: "P3", nombre: "Informativo", pendientes: 6, latenciaPromedio: 180 }
+            { prioridad: "P0", nombre: "Emergencia", pendientes: 0, latenciaPromedio: 0, procesados: 0, descartados: 0 },
+            { prioridad: "P1", nombre: "Alerta crítica", pendientes: 0, latenciaPromedio: 0, procesados: 0, descartados: 0 },
+            { prioridad: "P2", nombre: "Advertencia", pendientes: 0, latenciaPromedio: 0, procesados: 0, descartados: 0 },
+            { prioridad: "P3", nombre: "Informativo", pendientes: 0, latenciaPromedio: 0, procesados: 0, descartados: 0 }
         ]
     };
 };

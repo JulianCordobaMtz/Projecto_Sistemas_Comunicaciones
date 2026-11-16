@@ -4,6 +4,8 @@ import { estadoSistema } from "./servicios/estadoSistema.js";
 import { validarTelemetria } from "./validadores/telemetria.js";
 import { validarModo } from "./validadores/modo.js";
 import { validarOperador } from "./validadores/incidente.js";
+import { validarMensaje } from "./validadores/mensaje.js";
+import { colaPrioridad } from "./servicios/colaPrioridad.js";
 
 export const crearApp = () => {
     const app = express();
@@ -22,6 +24,25 @@ export const crearApp = () => {
     app.get("/api/nodos", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerNodos()));
     app.get("/api/incidentes", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerIncidentes()));
     app.get("/api/modo", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerModo()));
+    app.get("/api/cola", (_solicitud, respuesta) => respuesta.json(colaPrioridad.obtenerEstado()));
+    app.post("/api/mensajes", (solicitud, respuesta, siguiente) => {
+        try {
+            const mensaje = validarMensaje(solicitud.body);
+            if (!estadoSistema.existeNodo(mensaje.nodoId)) {
+                const error = new Error(`No existe el nodo ${mensaje.nodoId}`);
+                error.estadoHttp = 404;
+                throw error;
+            }
+            const resultado = colaPrioridad.encolar(mensaje);
+            respuesta.status(resultado.aceptado ? 202 : 503).json({
+                mensaje: resultado.aceptado ? "Mensaje agregado a la cola" : "Mensaje descartado porque la cola está llena",
+                resultado,
+                cola: colaPrioridad.obtenerEstado()
+            });
+        } catch (error) {
+            siguiente(error);
+        }
+    });
     app.patch("/api/modo", (solicitud, respuesta, siguiente) => {
         try {
             const modo = validarModo(solicitud.body);

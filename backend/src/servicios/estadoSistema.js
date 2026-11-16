@@ -36,6 +36,16 @@ class EstadoSistema extends EventEmitter {
         };
     }
 
+    existeNodo(nodoId) {
+        return this.#estado.nodos.some(({ id }) => id === nodoId);
+    }
+
+    actualizarCola(resumenCola) {
+        this.#estado.cola = structuredClone(resumenCola.prioridades);
+        this.#estado.sistema.actualizadoEn = new Date().toISOString();
+        return this.#publicarActualizacion();
+    }
+
     cambiarModo(modo) {
         this.#simulacionActiva = modo === "simulacion";
         this.#estado.sistema.modo = this.#simulacionActiva ? "Simulación" : "Datos externos";
