@@ -29,10 +29,11 @@ Desde la raíz del repositorio:
 ```bash
 node --test scripts/check-frontend.test.mjs
 node scripts/check-frontend.mjs
+node --test backend/test/*.test.mjs
 ```
 
-Las pruebas verifican el comprobador con archivos temporales; no son pruebas
-funcionales de la aplicación. El comprobador revisa recursivamente la sintaxis
+Las pruebas del frontend verifican el comprobador con archivos temporales; no son
+pruebas funcionales de la aplicación. El comprobador revisa recursivamente la sintaxis
 de los archivos `.js`, `.mjs` y `.cjs` como módulos ES, sin ejecutar el frontend.
 Usa el analizador nativo `SourceTextModule`, cuya API experimental se activa
 únicamente en un subproceso de Node; no enlaza ni evalúa los módulos.
@@ -60,11 +61,15 @@ nombres exportados, identificadores de fragmentos, DOM, comportamiento, aparienc
 accesibilidad ni disponibilidad de servicios externos. Aún faltan pruebas de la
 aplicación en navegador.
 
-GitHub Actions ejecutará las pruebas del comprobador y después la revisión del
-frontend en PR hacia `main`, pushes a `main` y `chore/ci`, y ejecución manual
-cuando el workflow esté disponible en la rama predeterminada. No instala
-dependencias ni configura caché de npm. Las acciones oficiales se fijan por SHA,
-con sus versiones indicadas en el workflow.
+Las 82 pruebas unitarias del backend cubren la cola prioritaria y el validador
+de mensajes. Usan `node:test`, `node:assert/strict` y módulos nativos de Node,
+al igual que la suite del comprobador del frontend; ninguna necesita instalar
+dependencias. Las pruebas del backend no incluyen HTTP, hardware ni congestión
+Wi-Fi.
 
-La validación del backend se incorporará en un job separado cuando se integre
-su rama, incluyendo instalación desde su lockfile y pruebas de API y WebSocket.
+GitHub Actions ejecutará las pruebas del comprobador y después la revisión del
+frontend en un job, y las pruebas unitarias de cola y validador del backend en
+otro job independiente. Se mantienen los PR hacia `main`, pushes a `main` y
+`chore/ci`, y ejecución manual cuando el workflow esté disponible en la rama
+predeterminada. No instala dependencias ni configura caché de npm. Las acciones
+oficiales se fijan por SHA, con sus versiones indicadas en el workflow.
