@@ -1,0 +1,16 @@
+{
+  "name": "scp-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend del Sistema de Comunicación Prioritaria",
+  "scripts": {
+    "start": "node src/servidor.js",
+    "dev": "node --watch src/servidor.js",
+    "check": "node --check src/servidor.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "ws": "^8.18.3"
+  }
+}

@@ -1,9 +1,10 @@
-import { inicializarEncabezado } from "../componentes/encabezado.js";
+import { actualizarEstadoEncabezado, inicializarEncabezado } from "../componentes/encabezado.js";
 import {
     actualizarGraficaRed,
     registrarMuestraRed
 } from "../componentes/graficaComunicaciones.js";
 import { estadoSistema, obtenerInstantaneaSistema } from "../servicios/datosSimulados.js";
+import { conectarBackend } from "../servicios/websocket.js";
 
 inicializarEncabezado(estadoSistema);
 
@@ -191,3 +192,8 @@ selectorMetricas.addEventListener("click", (evento) => {
 
 actualizarPagina();
 window.setInterval(actualizarPagina, 2000);
+const desconectarBackend = conectarBackend({
+    alActualizar: actualizarPagina,
+    alCambiarEstado: actualizarEstadoEncabezado
+});
+window.addEventListener("pagehide", desconectarBackend, { once: true });

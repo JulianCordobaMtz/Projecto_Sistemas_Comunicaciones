@@ -122,7 +122,56 @@ const limitar = (valor, minimo, maximo) =>
 const redondear = (valor, decimales = 1) =>
     Number(valor.toFixed(decimales));
 
+const COLA_SIMULADA = Object.freeze([
+    Object.freeze({ prioridad: "P0", nombre: "Emergencia", pendientes: 0, latenciaPromedio: 18 }),
+    Object.freeze({ prioridad: "P1", nombre: "Alerta crítica", pendientes: 0, latenciaPromedio: 34 }),
+    Object.freeze({ prioridad: "P2", nombre: "Advertencia", pendientes: 3, latenciaPromedio: 92 }),
+    Object.freeze({ prioridad: "P3", nombre: "Informativo", pendientes: 6, latenciaPromedio: 180 })
+]);
+
+let estadoBackend = null;
+
+export const establecerEstadoBackend = (datos) => {
+    if (!datos?.sistema || !Array.isArray(datos.hornos) || !Array.isArray(datos.nodos)) {
+        throw new TypeError("El estado recibido del backend no tiene el formato esperado");
+    }
+
+    const hornos = datos.hornos.map((horno) => {
+        const referencia = estadoSistema.hornos.find(({ id }) => id === horno.id);
+        return {
+            id: horno.id,
+            area: horno.area,
+            nombre: horno.nombre,
+            nodoId: horno.nodoId,
+            lectura: {
+                temperatura: Number(horno.temperatura),
+                ky026: Number(horno.ky026),
+                estado: horno.estado
+            },
+            temperatura: referencia?.temperatura ?? {
+                minima: Number(horno.temperatura),
+                promedio: Number(horno.temperatura),
+                maxima: Number(horno.temperatura),
+                umbralCritico: horno.umbrales?.temperaturaCritica ?? 40
+            },
+            emergencia: Boolean(horno.emergencia)
+        };
+    });
+
+    estadoBackend = {
+        conexion: datos.sistema.conexion ?? "En línea",
+        modo: datos.sistema.modo ?? "Automático",
+        actualizadoEn: datos.sistema.actualizadoEn,
+        hornos,
+        nodos: datos.nodos.map((nodo) => ({ ...nodo })),
+        incidentes: Array.isArray(datos.incidentes) ? datos.incidentes.map((incidente) => ({ ...incidente })) : [],
+        cola: Array.isArray(datos.cola) ? datos.cola.map((mensaje) => ({ ...mensaje })) : []
+    };
+};
+
 export const obtenerInstantaneaSistema = (ahora = new Date()) => {
+    if (estadoBackend) return structuredClone(estadoBackend);
+
     const segundos = ahora.getTime() / 1000;
 
     const hornos = estadoSistema.hornos.map((horno, indice) => {
@@ -156,6 +205,7 @@ export const obtenerInstantaneaSistema = (ahora = new Date()) => {
         modo: estadoSistema.modo,
         hornos,
         nodos,
-        incidentes
+        incidentes,
+        cola: structuredClone(COLA_SIMULADA)
     };
 };
