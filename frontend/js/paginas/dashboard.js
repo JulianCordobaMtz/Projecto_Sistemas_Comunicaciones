@@ -1,8 +1,9 @@
-import { inicializarEncabezado } from "../componentes/encabezado.js";
+import { actualizarEstadoEncabezado, inicializarEncabezado } from "../componentes/encabezado.js";
 import { actualizarGraficasDashboard } from "../componentes/graficaTemperatura.js";
 import { actualizarIndicadorIncidentes } from "../componentes/indicadorEstado.js";
 import { actualizarTarjetaHorno } from "../componentes/tarjetaHorno.js";
 import { estadoSistema, obtenerInstantaneaSistema } from "../servicios/datosSimulados.js";
+import { conectarBackend } from "../servicios/websocket.js";
 
 inicializarEncabezado(estadoSistema);
 
@@ -38,6 +39,16 @@ const actualizarComunicaciones = (nodos, ahora) => {
     });
 };
 
+const actualizarCola = (cola = []) => {
+    const filas = document.querySelectorAll(".priority-summary > div");
+    filas.forEach((fila, indice) => {
+        const mensaje = cola[indice];
+        if (!mensaje) return;
+        fila.querySelector("dt").textContent = `${mensaje.nombre} (${mensaje.prioridad})`;
+        fila.querySelector("dd").textContent = `${mensaje.pendientes} en cola · ${mensaje.latenciaPromedio} ms`;
+    });
+};
+
 const actualizarDashboard = () => {
     const ahora = new Date();
     const instantanea = obtenerInstantaneaSistema(ahora);
@@ -57,7 +68,13 @@ const actualizarDashboard = () => {
     actualizarIndicadorIncidentes(instantanea.incidentes, instantanea.hornos);
     actualizarGraficasDashboard(instantanea, ahora);
     actualizarComunicaciones(instantanea.nodos, ahora);
+    actualizarCola(instantanea.cola);
 };
 
 actualizarDashboard();
 window.setInterval(actualizarDashboard, 2000);
+const desconectarBackend = conectarBackend({
+    alActualizar: actualizarDashboard,
+    alCambiarEstado: actualizarEstadoEncabezado
+});
+window.addEventListener("pagehide", desconectarBackend, { once: true });

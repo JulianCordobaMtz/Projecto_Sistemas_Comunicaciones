@@ -28,6 +28,17 @@ const actualizarCampoTexto = (nombre, valor) => {
     }
 };
 
+export const actualizarEstadoEncabezado = ({ conexion, modo } = {}) => {
+    if (conexion) actualizarCampoTexto("backend", conexion);
+    if (modo) {
+        actualizarCampoTexto("modo", modo);
+        const bannerSimulacion = document.querySelector(".simulation-banner");
+        if (bannerSimulacion) {
+            bannerSimulacion.hidden = modo.toLocaleLowerCase("es-MX") !== "simulación";
+        }
+    }
+};
+
 const actualizarReloj = () => {
     const ahora = new Date();
     const campoFecha = buscarCampo("fecha")?.querySelector("time");
@@ -45,8 +56,7 @@ const actualizarReloj = () => {
 };
 
 export const inicializarEncabezado = ({ conexion, modo }) => {
-    actualizarCampoTexto("backend", conexion);
-    actualizarCampoTexto("modo", modo);
+    actualizarEstadoEncabezado({ conexion, modo });
     actualizarReloj();
 
     const temporizador = window.setInterval(actualizarReloj, 1000);
