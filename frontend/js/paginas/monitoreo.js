@@ -5,6 +5,7 @@ import {
 } from "../componentes/graficaMonitoreo.js";
 import { estadoSistema, obtenerInstantaneaSistema } from "../servicios/datosSimulados.js";
 import { conectarBackend } from "../servicios/websocket.js";
+import { reconocerIncidente } from "../servicios/api.js";
 
 inicializarEncabezado(estadoSistema);
 
@@ -19,7 +20,7 @@ let hornoSeleccionadoId = "horno-central";
 let lecturaAnterior = null;
 let sonidoSilenciado = false;
 let intervaloSegundos = 30;
-const reconocimientos = new Map();
+const reconocimientosLocales = new Map();
 const inicioAdvertenciaComunicacion = new Date();
 
 const textoNivel = (valor) => {
@@ -144,7 +145,9 @@ const actualizarIncidente = (horno, nodo, incidentes, ahora) => {
         return;
     }
 
-    const reconocidoEn = reconocimientos.get(incidente.id);
+    const reconocidoEn = esComunicacion
+        ? reconocimientosLocales.get(incidente.id)
+        : incidente.reconocidoEn ? new Date(incidente.reconocidoEn) : null;
     const inicio = new Date(incidente.inicio);
     const tiempoActivo = Math.max(0, Math.floor((ahora - inicio) / 1000));
     const tiempoReconocido = reconocidoEn ? Math.max(0, Math.floor((ahora - reconocidoEn) / 1000)) : null;
@@ -194,7 +197,7 @@ const actualizarIncidente = (horno, nodo, incidentes, ahora) => {
 };
 
 const actualizarEncabezadoEmergencia = (incidentes) => {
-    const emergencias = incidentes.filter(({ prioridad }) => prioridad === "P0").length;
+    const emergencias = incidentes.filter(({ prioridad, estado }) => prioridad === "P0" && estado !== "resuelto").length;
     const estado = document.querySelector("body > div > header > p[role='status']");
     estado.textContent = emergencias === 0
         ? "Sin emergencias activas"
@@ -228,10 +231,26 @@ document.querySelector("section[aria-labelledby='selector-title'] [role='group']
     });
 
 const articuloIncidente = document.querySelector("section[aria-labelledby='active-condition-title'] article");
-articuloIncidente.querySelector("footer button:first-of-type").addEventListener("click", () => {
-    if (articuloIncidente.dataset.incidenteId) {
-        reconocimientos.set(articuloIncidente.dataset.incidenteId, new Date());
+articuloIncidente.querySelector("footer button:first-of-type").addEventListener("click", async (evento) => {
+    const incidenteId = articuloIncidente.dataset.incidenteId;
+    if (!incidenteId) return;
+
+    if (incidenteId.startsWith("advertencia-")) {
+        reconocimientosLocales.set(incidenteId, new Date());
         actualizarPagina();
+        return;
+    }
+
+    const boton = evento.currentTarget;
+    boton.disabled = true;
+    boton.textContent = "Reconociendo…";
+    try {
+        await reconocerIncidente(incidenteId, "Operador 01");
+    } catch (error) {
+        console.error(error);
+        window.alert(`No fue posible reconocer el incidente: ${error.message}`);
+        boton.disabled = false;
+        boton.textContent = "Reconocer incidente";
     }
 });
 

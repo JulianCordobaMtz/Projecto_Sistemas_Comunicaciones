@@ -51,6 +51,46 @@ class EstadoSistema extends EventEmitter {
         return this.#publicarActualizacion();
     }
 
+    reconocerIncidente(incidenteId, operador) {
+        const incidente = this.#obtenerIncidenteEditable(incidenteId);
+        if (incidente.estado === "resuelto") {
+            const error = new Error("No se puede reconocer un incidente resuelto");
+            error.estadoHttp = 409;
+            throw error;
+        }
+
+        if (incidente.estado !== "reconocido") {
+            incidente.estado = "reconocido";
+            incidente.reconocidoEn = new Date().toISOString();
+            incidente.operadorReconocimiento = operador;
+        }
+
+        return this.#publicarActualizacion();
+    }
+
+    cerrarIncidente(incidenteId, operador) {
+        const incidente = this.#obtenerIncidenteEditable(incidenteId);
+        if (incidente.estado !== "resuelto") {
+            const finalizacion = new Date();
+            incidente.estado = "resuelto";
+            incidente.finalizacion = finalizacion.toISOString();
+            incidente.operadorCierre = operador;
+            incidente.duracionSegundos = Math.max(0, Math.floor((finalizacion - new Date(incidente.inicio)) / 1000));
+        }
+
+        return this.#publicarActualizacion();
+    }
+
+    #obtenerIncidenteEditable(incidenteId) {
+        const incidente = this.#estado.incidentes.find(({ id }) => id === incidenteId);
+        if (!incidente) {
+            const error = new Error(`No existe el incidente ${incidenteId}`);
+            error.estadoHttp = 404;
+            throw error;
+        }
+        return incidente;
+    }
+
     actualizarTelemetria(telemetria) {
         const indiceNodo = this.#estado.nodos.findIndex(({ id }) => id === telemetria.nodoId);
         if (indiceNodo === -1) {

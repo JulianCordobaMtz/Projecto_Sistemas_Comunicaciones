@@ -3,6 +3,7 @@ import { configuracion } from "./configuracion.js";
 import { estadoSistema } from "./servicios/estadoSistema.js";
 import { validarTelemetria } from "./validadores/telemetria.js";
 import { validarModo } from "./validadores/modo.js";
+import { validarOperador } from "./validadores/incidente.js";
 
 export const crearApp = () => {
     const app = express();
@@ -26,6 +27,24 @@ export const crearApp = () => {
             const modo = validarModo(solicitud.body);
             const estado = estadoSistema.cambiarModo(modo);
             respuesta.json({ mensaje: `Modo cambiado a ${estado.sistema.modo}`, estado });
+        } catch (error) {
+            siguiente(error);
+        }
+    });
+    app.patch("/api/incidentes/:incidenteId/reconocer", (solicitud, respuesta, siguiente) => {
+        try {
+            const operador = validarOperador(solicitud.body);
+            const estado = estadoSistema.reconocerIncidente(solicitud.params.incidenteId, operador);
+            respuesta.json({ mensaje: "Incidente reconocido", estado });
+        } catch (error) {
+            siguiente(error);
+        }
+    });
+    app.patch("/api/incidentes/:incidenteId/cerrar", (solicitud, respuesta, siguiente) => {
+        try {
+            const operador = validarOperador(solicitud.body);
+            const estado = estadoSistema.cerrarIncidente(solicitud.params.incidenteId, operador);
+            respuesta.json({ mensaje: "Incidente cerrado", estado });
         } catch (error) {
             siguiente(error);
         }
