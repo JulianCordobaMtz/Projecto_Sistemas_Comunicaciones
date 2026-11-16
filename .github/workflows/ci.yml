@@ -1,0 +1,34 @@
+name: CI del frontend
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, chore/ci]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Comprobaciones estáticas del frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obtener el repositorio
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Preparar Node desde .nvmrc
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+
+      - name: Probar el comprobador
+        run: node --test scripts/check-frontend.test.mjs
+
+      - name: Revisar el frontend
+        run: node scripts/check-frontend.mjs
