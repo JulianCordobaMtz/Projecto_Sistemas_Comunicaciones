@@ -25,9 +25,9 @@ export const crearEstadoInicial = () => {
             }
         ],
         nodos: [
-            { id: "nodo-01", nombre: "Nodo 01", area: "Horno norte", estado: "estable", rssi: -58, latencia: 25, perdidas: 0, retransmisiones: 0, ultimoDato: ahora.toISOString() },
-            { id: "nodo-02", nombre: "Nodo 02", area: "Horno central", estado: "estable", rssi: -61, latencia: 31, perdidas: 0.8, retransmisiones: 1, ultimoDato: ahora.toISOString() },
-            { id: "nodo-03", nombre: "Nodo 03", area: "Horno sur", estado: "degradado", rssi: -76, latencia: 75, perdidas: 3.4, retransmisiones: 4, ultimoDato: ahora.toISOString() }
+            { id: "nodo-01", nombre: "Nodo 01", area: "Horno norte", hornoId: "horno-norte", estado: "estable", rssi: -58, latencia: 25, perdidas: 0, retransmisiones: 0, ultimoDato: ahora.toISOString() },
+            { id: "nodo-02", nombre: "Nodo 02", area: "Horno central", hornoId: "horno-central", estado: "estable", rssi: -61, latencia: 31, perdidas: 0.8, retransmisiones: 1, ultimoDato: ahora.toISOString() },
+            { id: "nodo-03", nombre: "Nodo 03", area: "Horno sur", hornoId: "horno-sur", estado: "degradado", rssi: -76, latencia: 75, perdidas: 3.4, retransmisiones: 4, ultimoDato: ahora.toISOString() }
         ],
         incidentes: [
             { id: "incidente-001", prioridad: "P0", tipo: "emergencia", hornoId: "horno-central", titulo: "Emergencia activa", estado: "sin-atender", inicio: new Date(ahora.getTime() - 42000).toISOString() },

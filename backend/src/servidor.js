@@ -15,9 +15,12 @@ const enviar = (cliente, tipo, datos) => {
 
 websocket.on("connection", (cliente) => enviar(cliente, "estado_inicial", estadoSistema.obtenerEstado()));
 
-const temporizador = setInterval(() => {
-    const estado = estadoSistema.simularSiguienteLectura();
+estadoSistema.on("actualizacion", (estado) => {
     websocket.clients.forEach((cliente) => enviar(cliente, "actualizacion_sistema", estado));
+});
+
+const temporizador = setInterval(() => {
+    estadoSistema.simularSiguienteLectura();
 }, configuracion.intervaloSimulacion);
 
 servidor.listen(configuracion.puerto, () => {

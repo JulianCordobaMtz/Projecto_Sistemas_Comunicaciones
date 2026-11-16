@@ -1,6 +1,7 @@
 import express from "express";
 import { configuracion } from "./configuracion.js";
 import { estadoSistema } from "./servicios/estadoSistema.js";
+import { validarTelemetria } from "./validadores/telemetria.js";
 
 export const crearApp = () => {
     const app = express();
@@ -8,7 +9,7 @@ export const crearApp = () => {
     app.use((solicitud, respuesta, siguiente) => {
         respuesta.setHeader("Access-Control-Allow-Origin", configuracion.origenPermitido);
         respuesta.setHeader("Access-Control-Allow-Headers", "Content-Type");
-        respuesta.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+        respuesta.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,OPTIONS");
         if (solicitud.method === "OPTIONS") return respuesta.sendStatus(204);
         siguiente();
     });
@@ -18,6 +19,21 @@ export const crearApp = () => {
     app.get("/api/hornos", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerHornos()));
     app.get("/api/nodos", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerNodos()));
     app.get("/api/incidentes", (_solicitud, respuesta) => respuesta.json(estadoSistema.obtenerIncidentes()));
+    app.post("/api/telemetria", (solicitud, respuesta, siguiente) => {
+        try {
+            const telemetria = validarTelemetria(solicitud.body);
+            const estado = estadoSistema.actualizarTelemetria(telemetria);
+            respuesta.json({ mensaje: "Telemetría recibida", estado });
+        } catch (error) {
+            siguiente(error);
+        }
+    });
     app.use((_solicitud, respuesta) => respuesta.status(404).json({ error: "Recurso no encontrado" }));
+    app.use((error, _solicitud, respuesta, _siguiente) => {
+        respuesta.status(error.estadoHttp ?? 500).json({
+            error: error.message ?? "Error interno del servidor",
+            ...(error.detalles ? { detalles: error.detalles } : {})
+        });
+    });
     return app;
 };
