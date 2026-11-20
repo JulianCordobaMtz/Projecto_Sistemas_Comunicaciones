@@ -1,6 +1,7 @@
 import { inicializarEncabezado } from "../componentes/encabezado.js";
 import { estadoSistema } from "../servicios/datosSimulados.js";
 import { eventosHistorial, metricasPruebaPriorizacion } from "../servicios/datosHistorial.js";
+import { conectarBackend } from "../servicios/websocket.js";
 
 inicializarEncabezado(estadoSistema);
 
@@ -14,7 +15,49 @@ const FORMATO_HORA = new Intl.DateTimeFormat("es-MX", {
 });
 
 let paginaActual = 1;
-let eventoSeleccionadoId = eventosHistorial[0].id;
+let eventosOperativos = [...eventosHistorial];
+let eventoSeleccionadoId = eventosOperativos[0].id;
+
+const formatearHoraSegura = (fecha) => {
+    if (!fecha) return "—";
+    const valor = new Date(fecha);
+    return Number.isNaN(valor.getTime()) ? "—" : FORMATO_HORA.format(valor);
+};
+
+const formatearDuracion = (segundos) => {
+    const total = Math.max(0, Math.floor(segundos));
+    return total >= 60 ? `${Math.floor(total / 60)} min ${total % 60} s` : `${total} s`;
+};
+
+const htmlSeguro = (valor) => String(valor ?? "").replace(/[&<>"']/g, (caracter) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+}[caracter]));
+
+const convertirIncidenteEnEvento = (incidente, hornos, ahora = new Date()) => {
+    const horno = hornos.find(({ id }) => id === incidente.hornoId);
+    const inicio = new Date(incidente.inicio);
+    const duracionSegundos = Number.isNaN(inicio.getTime()) ? 0 : Math.max(0, Math.floor((ahora - inicio) / 1000));
+    const operador = incidente.operadorReconocimiento || "Pendiente";
+    const reconocido = Boolean(incidente.reconocidoEn);
+
+    return {
+        id: `actual-${incidente.id}`,
+        fecha: incidente.inicio,
+        prioridad: incidente.prioridad,
+        area: horno?.area || "Área no identificada",
+        origen: horno ? `${horno.area} · ${horno.nombre}` : "Origen no identificado",
+        evento: incidente.titulo || "Incidente activo",
+        duracion: formatearDuracion(duracionSegundos),
+        duracionSegundos,
+        resultado: reconocido ? "Reconocido" : "Activo",
+        operador,
+        reconocimiento: incidente.reconocidoEn || null,
+        finalizacion: incidente.finalizacion || null,
+        secuencia: reconocido
+            ? ["Incidente detectado.", "Mensaje recibido por la estación central.", `Incidente reconocido por ${operador}.`]
+            : ["Incidente detectado.", "Mensaje recibido por la estación central.", "Pendiente de reconocimiento."]
+    };
+};
 
 const elementos = {
     formulario: document.querySelector("section[aria-labelledby='event-history-title'] form"),
@@ -35,7 +78,7 @@ const obtenerFiltros = () => ({
 
 const filtrarEventos = () => {
     const filtros = obtenerFiltros();
-    return eventosHistorial.filter((evento) => {
+    return eventosOperativos.filter((evento) => {
         const texto = `${evento.origen} ${evento.evento} ${evento.operador}`.toLocaleLowerCase("es-MX");
         const fecha = evento.fecha.slice(0, 10);
         const coincideBusqueda = !filtros.busqueda || texto.includes(filtros.busqueda);
@@ -62,9 +105,9 @@ const renderizarDetalle = (evento) => {
     articulos[0].querySelector(":scope > p").textContent = `${nombrePrioridad(evento.prioridad)} (${evento.prioridad})`;
     articulos[0].querySelector("h3").textContent = evento.evento;
     const valores = [
-        FORMATO_HORA.format(new Date(evento.fecha)),
-        FORMATO_HORA.format(new Date(evento.reconocimiento)),
-        FORMATO_HORA.format(new Date(evento.finalizacion)),
+        formatearHoraSegura(evento.fecha),
+        formatearHoraSegura(evento.reconocimiento),
+        formatearHoraSegura(evento.finalizacion),
         evento.duracion,
         evento.operador
     ];
@@ -76,8 +119,8 @@ const renderizarDetalle = (evento) => {
     const lista = articulos[1].querySelector("ol");
     lista.innerHTML = evento.secuencia.map((descripcion, indice) => `
         <li>
-            <time datetime="${tiempos[indice]}">${FORMATO_HORA.format(new Date(tiempos[indice]))}</time>
-            <span>${descripcion}</span>
+            <time${tiempos[indice] ? ` datetime="${htmlSeguro(tiempos[indice])}"` : ""}>${formatearHoraSegura(tiempos[indice])}</time>
+            <span>${htmlSeguro(descripcion)}</span>
         </li>
     `).join("");
 };
@@ -95,14 +138,14 @@ const renderizarHistorial = () => {
     elementos.cuerpoTabla.innerHTML = visibles.length === 0
         ? `<tr><td colspan="7">No hay eventos que coincidan con los filtros seleccionados.</td></tr>`
         : visibles.map((evento) => `
-            <tr data-evento-id="${evento.id}" data-prioridad="${evento.prioridad}">
-                <td><time datetime="${evento.fecha}">${FORMATO_FECHA_HORA.format(new Date(evento.fecha))}</time></td>
-                <td><strong>${nombrePrioridad(evento.prioridad)} <small>(${evento.prioridad})</small></strong></td>
-                <td>${evento.origen}</td>
-                <td>${evento.evento}</td>
-                <td>${evento.duracion}</td>
-                <td>${evento.resultado} · ${evento.operador}</td>
-                <td><button type="button" data-ver-evento="${evento.id}">Ver</button></td>
+            <tr data-evento-id="${htmlSeguro(evento.id)}" data-prioridad="${htmlSeguro(evento.prioridad)}">
+                <td><time datetime="${htmlSeguro(evento.fecha)}">${FORMATO_FECHA_HORA.format(new Date(evento.fecha))}</time></td>
+                <td><strong>${htmlSeguro(nombrePrioridad(evento.prioridad))} <small>(${htmlSeguro(evento.prioridad)})</small></strong></td>
+                <td>${htmlSeguro(evento.origen)}</td>
+                <td>${htmlSeguro(evento.evento)}</td>
+                <td>${htmlSeguro(evento.duracion)}</td>
+                <td>${htmlSeguro(evento.resultado)} · ${htmlSeguro(evento.operador)}</td>
+                <td><button type="button" data-ver-evento="${htmlSeguro(evento.id)}">Ver</button></td>
             </tr>
         `).join("");
 
@@ -113,23 +156,35 @@ const renderizarHistorial = () => {
     botones[1].setAttribute("aria-label", `Página ${paginaActual} de ${totalPaginas}`);
     botones[2].disabled = paginaActual >= totalPaginas;
 
-    const seleccionado = eventosHistorial.find(({ id }) => id === eventoSeleccionadoId);
+    const seleccionado = eventosOperativos.find(({ id }) => id === eventoSeleccionadoId);
     renderizarDetalle(seleccionado);
 };
 
 const actualizarResumen = () => {
     const tarjetas = document.querySelectorAll("section[aria-labelledby='history-summary-title'] article");
-    const incidentes = eventosHistorial.filter(({ prioridad }) => ["P0", "P1", "P2"].includes(prioridad));
-    const fallos = eventosHistorial.filter(({ prioridad }) => prioridad === "Red");
+    const incidentes = eventosOperativos.filter(({ prioridad }) => ["P0", "P1", "P2"].includes(prioridad));
+    const fallos = eventosOperativos.filter(({ prioridad }) => prioridad === "Red");
+    const emergencias = incidentes.filter(({ prioridad }) => prioridad === "P0").length;
+    const alertas = incidentes.length - emergencias;
     const promedioAtencion = Math.round(incidentes.reduce((suma, evento) => suma + evento.duracionSegundos, 0) / incidentes.length);
     tarjetas[0].querySelector("data").value = incidentes.length;
     tarjetas[0].querySelector("data").textContent = incidentes.length;
-    tarjetas[0].querySelector("small").textContent = `${incidentes.filter(({ prioridad }) => prioridad === "P0").length} emergencia y ${incidentes.length - 1} alertas`;
+    tarjetas[0].querySelector("small").textContent = `${emergencias} ${emergencias === 1 ? "emergencia" : "emergencias"} y ${alertas} alertas`;
     tarjetas[1].querySelector("data").value = fallos.length;
     tarjetas[1].querySelector("data").textContent = fallos.length;
     tarjetas[1].querySelector("small").textContent = "Todos recuperados";
     tarjetas[2].querySelector("data").value = promedioAtencion;
     tarjetas[2].querySelector("data").textContent = `${Math.floor(promedioAtencion / 60)} min ${promedioAtencion % 60} s`;
+};
+
+const integrarIncidentesActuales = (datos) => {
+    const actuales = (datos.incidentes || [])
+        .filter(({ estado }) => !["resuelto", "cerrado"].includes(estado))
+        .map((incidente) => convertirIncidenteEnEvento(incidente, datos.hornos || []));
+
+    eventosOperativos = [...actuales, ...eventosHistorial];
+    renderizarHistorial();
+    actualizarResumen();
 };
 
 const csvSeguro = (valor) => `"${String(valor).replaceAll('"', '""')}"`;
@@ -238,3 +293,6 @@ seccionPruebas.querySelectorAll("article > button").forEach((boton) => {
 actualizarResumen();
 renderizarHistorial();
 cambiarVista(false);
+
+const desconectarBackend = conectarBackend({ alActualizar: integrarIncidentesActuales });
+window.addEventListener("pagehide", desconectarBackend, { once: true });

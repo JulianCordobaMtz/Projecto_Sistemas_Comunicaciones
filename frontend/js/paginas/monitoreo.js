@@ -16,12 +16,18 @@ const FORMATO_HORA = new Intl.DateTimeFormat("es-MX", {
     hour12: false
 });
 
-let hornoSeleccionadoId = "horno-central";
+const parametrosPagina = new URLSearchParams(window.location.search);
+let hornoSeleccionadoId = parametrosPagina.get("horno") || "horno-central";
 let lecturaAnterior = null;
 let sonidoSilenciado = false;
 let intervaloSegundos = 30;
 const reconocimientosLocales = new Map();
 const inicioAdvertenciaComunicacion = new Date();
+const dialogoReconocimiento = document.querySelector("#incident-recognition-dialog");
+const formularioReconocimiento = dialogoReconocimiento.querySelector("form");
+const campoOperador = dialogoReconocimiento.querySelector("#recognition-operator");
+const errorReconocimiento = dialogoReconocimiento.querySelector(".recognition-error");
+let incidentePendienteId = null;
 
 const textoNivel = (valor) => {
     if (valor >= 75) return "Alto";
@@ -145,9 +151,13 @@ const actualizarIncidente = (horno, nodo, incidentes, ahora) => {
         return;
     }
 
+    const reconocimientoLocal = esComunicacion ? reconocimientosLocales.get(incidente.id) : null;
     const reconocidoEn = esComunicacion
-        ? reconocimientosLocales.get(incidente.id)
+        ? reconocimientoLocal?.fecha
         : incidente.reconocidoEn ? new Date(incidente.reconocidoEn) : null;
+    const operadorReconocimiento = esComunicacion
+        ? reconocimientoLocal?.operador
+        : incidente.operadorReconocimiento;
     const inicio = new Date(incidente.inicio);
     const tiempoActivo = Math.max(0, Math.floor((ahora - inicio) / 1000));
     const tiempoReconocido = reconocidoEn ? Math.max(0, Math.floor((ahora - reconocidoEn) / 1000)) : null;
@@ -190,20 +200,31 @@ const actualizarIncidente = (horno, nodo, incidentes, ahora) => {
     }
     const botonReconocer = articulo.querySelector("footer button:first-of-type");
     botonReconocer.disabled = Boolean(reconocidoEn);
-    botonReconocer.textContent = reconocidoEn ? "Incidente reconocido" : "Reconocer incidente";
+    botonReconocer.textContent = reconocidoEn
+        ? `Reconocido por ${operadorReconocimiento || "operador"}`
+        : "Reconocer incidente";
     const botonSonido = articulo.querySelector("footer button:nth-of-type(2)");
     botonSonido.hidden = esComunicacion;
     botonSonido.textContent = sonidoSilenciado ? "Activar sonido" : "Silenciar sonido";
 };
 
 const actualizarEncabezadoEmergencia = (incidentes) => {
-    const emergencias = incidentes.filter(({ prioridad, estado }) => prioridad === "P0" && estado !== "resuelto").length;
-    const estado = document.querySelector("body > div > header > p[role='status']");
-    estado.textContent = emergencias === 0
-        ? "Sin emergencias activas"
-        : emergencias === 1
-            ? "Una emergencia activa"
-            : `${emergencias} emergencias activas`;
+    const emergencias = incidentes.filter(({ prioridad, estado }) => prioridad === "P0" && !["resuelto", "cerrado"].includes(estado));
+    const sinReconocer = emergencias.filter(({ estado }) => !["reconocido", "reconocida"].includes(estado));
+    const indicador = document.querySelector("body > div > header > p[role='status']");
+
+    indicador.dataset.emergencyState = sinReconocer.length > 0
+        ? "unrecognized"
+        : emergencias.length > 0 ? "recognized" : "none";
+    indicador.textContent = sinReconocer.length === 1
+        ? "Una emergencia activa"
+        : sinReconocer.length > 1
+            ? `${sinReconocer.length} emergencias activas`
+            : emergencias.length === 1
+                ? "Emergencia reconocida"
+                : emergencias.length > 1
+                    ? `${emergencias.length} emergencias reconocidas`
+                    : "Sin emergencias activas";
 };
 
 const actualizarPagina = () => {
@@ -234,23 +255,43 @@ const articuloIncidente = document.querySelector("section[aria-labelledby='activ
 articuloIncidente.querySelector("footer button:first-of-type").addEventListener("click", async (evento) => {
     const incidenteId = articuloIncidente.dataset.incidenteId;
     if (!incidenteId) return;
+    incidentePendienteId = incidenteId;
+    formularioReconocimiento.reset();
+    errorReconocimiento.hidden = true;
+    dialogoReconocimiento.showModal();
+    campoOperador.focus();
+});
 
-    if (incidenteId.startsWith("advertencia-")) {
-        reconocimientosLocales.set(incidenteId, new Date());
-        actualizarPagina();
-        return;
-    }
+dialogoReconocimiento.querySelector("[data-cancelar-reconocimiento]").addEventListener("click", () => {
+    incidentePendienteId = null;
+    dialogoReconocimiento.close();
+});
 
-    const boton = evento.currentTarget;
-    boton.disabled = true;
-    boton.textContent = "Reconociendo…";
+formularioReconocimiento.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+    const operador = campoOperador.value.trim();
+    if (!incidentePendienteId || !operador) return;
+
+    const botonConfirmar = formularioReconocimiento.querySelector("button[type='submit']");
+    botonConfirmar.disabled = true;
+    botonConfirmar.textContent = "Reconociendo…";
+    errorReconocimiento.hidden = true;
+
     try {
-        await reconocerIncidente(incidenteId, "Operador 01");
+        if (incidentePendienteId.startsWith("advertencia-")) {
+            reconocimientosLocales.set(incidentePendienteId, { fecha: new Date(), operador });
+        } else {
+            await reconocerIncidente(incidentePendienteId, operador);
+        }
+        incidentePendienteId = null;
+        dialogoReconocimiento.close();
+        actualizarPagina();
     } catch (error) {
-        console.error(error);
-        window.alert(`No fue posible reconocer el incidente: ${error.message}`);
-        boton.disabled = false;
-        boton.textContent = "Reconocer incidente";
+        errorReconocimiento.textContent = `No fue posible reconocer el incidente: ${error.message}`;
+        errorReconocimiento.hidden = false;
+    } finally {
+        botonConfirmar.disabled = false;
+        botonConfirmar.textContent = "Confirmar reconocimiento";
     }
 });
 

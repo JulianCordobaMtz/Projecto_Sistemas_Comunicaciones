@@ -1,7 +1,7 @@
 import { actualizarEstadoEncabezado, inicializarEncabezado } from "../componentes/encabezado.js";
 import { actualizarGraficasDashboard } from "../componentes/graficaTemperatura.js";
-import { actualizarIndicadorIncidentes } from "../componentes/indicadorEstado.js?v=20261119-estados";
-import { actualizarTarjetaHorno } from "../componentes/tarjetaHorno.js?v=20261119-estados";
+import { actualizarIndicadorIncidentes } from "../componentes/indicadorEstado.js?v=20261120-estado-emergencia";
+import { actualizarTarjetaHorno } from "../componentes/tarjetaHorno.js?v=20261119-gestion-incidentes";
 import { estadoSistema, obtenerInstantaneaSistema } from "../servicios/datosSimulados.js";
 import { conectarBackend } from "../servicios/websocket.js";
 
@@ -78,3 +78,4 @@ const desconectarBackend = conectarBackend({
     alCambiarEstado: actualizarEstadoEncabezado
 });
 window.addEventListener("pagehide", desconectarBackend, { once: true });
+

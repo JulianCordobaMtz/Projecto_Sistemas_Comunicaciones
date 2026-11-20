@@ -1098,6 +1098,135 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
     box-shadow: inset 4px 0 0 var(--color-text-muted);
 }
 
+.incident-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.incident-actions button,
+.incident-actions a {
+    display: grid;
+    min-height: 42px;
+    place-items: center;
+    padding: 8px 10px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(18, 34, 48, 0.88);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-align: center;
+    cursor: pointer;
+}
+
+.incident-actions button {
+    border-color: #ffb5bd;
+    color: #26070c;
+    background: #ff9ca6;
+}
+
+.incident-actions a:hover,
+.incident-actions button:hover {
+    filter: brightness(1.08);
+    text-decoration: none;
+}
+
+.emergency-card.is-recognized {
+    animation: none;
+    border-color: rgba(255, 181, 189, 0.42);
+    background: rgba(69, 35, 42, 0.62);
+    box-shadow: none;
+}
+
+#incident-recognition-dialog {
+    width: min(460px, calc(100vw - 40px));
+    padding: 0;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    color: #ffffff;
+    background: #0d1822;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+
+#incident-recognition-dialog::backdrop {
+    background: rgba(2, 8, 13, 0.76);
+    backdrop-filter: blur(4px);
+}
+
+#incident-recognition-dialog form {
+    display: grid;
+    gap: 14px;
+    padding: 24px;
+}
+
+#incident-recognition-dialog header p {
+    color: var(--color-primary);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+#incident-recognition-dialog h2 {
+    margin-top: 4px;
+}
+
+#incident-recognition-dialog form > p {
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+}
+
+#incident-recognition-dialog label {
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+#incident-recognition-dialog input {
+    min-height: 44px;
+    padding: 9px 11px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(7, 16, 24, 0.9);
+    font: inherit;
+}
+
+#incident-recognition-dialog .recognition-error {
+    color: #ffb6bd;
+    font-weight: 700;
+}
+
+#incident-recognition-dialog footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#incident-recognition-dialog footer button {
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(18, 34, 48, 0.9);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#incident-recognition-dialog footer button[type="submit"] {
+    border-color: #ffb5bd;
+    color: #26070c;
+    background: #ff9ca6;
+}
+
+#incident-recognition-dialog button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
 .emergency-card {
     animation: resaltar-p0-sin-reconocer 2s ease-in-out infinite;
 }
@@ -1107,6 +1236,30 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
         border-color: #ffd1d6;
         box-shadow: 0 0 0 3px rgba(255, 92, 108, 0.1), 0 0 24px rgba(255, 40, 65, 0.22);
     }
+}
+
+/* El encabezado solo parpadea mientras exista una emergencia P0 sin reconocer. */
+body > div > header > p[role="status"][data-emergency-state] {
+    animation: none;
+    transform: none;
+}
+
+body > div > header > p[role="status"][data-emergency-state="unrecognized"] {
+    animation: pulso-emergencia-intenso 1s ease-in-out infinite;
+}
+
+body > div > header > p[role="status"][data-emergency-state="recognized"] {
+    border-color: rgba(255, 190, 85, 0.58);
+    color: #fff2d1;
+    background: rgba(255, 190, 85, 0.13);
+    box-shadow: none;
+}
+
+body > div > header > p[role="status"][data-emergency-state="none"] {
+    border-color: rgba(57, 217, 138, 0.52);
+    color: #bdf7d8;
+    background: rgba(57, 217, 138, 0.1);
+    box-shadow: none;
 }
 
 .alarm-lifecycle {
