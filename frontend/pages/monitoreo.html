@@ -6,7 +6,7 @@
     <meta name="description" content="Monitoreo detallado de hornos y sensores del Sistema de Comunicación Prioritaria.">
     <title>Monitoreo | Sistema de Comunicación Prioritaria</title>
     <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/componentes.css">
+    <link rel="stylesheet" href="../css/componentes.css?v=20261120-estado-emergencia">
     <link rel="stylesheet" href="../css/monitoreo.css">
 </head>
 <body>
@@ -220,6 +220,23 @@
             </section>
         </main>
     </div>
-    <script type="module" src="../js/paginas/monitoreo.js"></script>
+    <dialog id="incident-recognition-dialog" aria-labelledby="recognition-dialog-title">
+        <form method="dialog">
+            <header>
+                <p>Atención operativa</p>
+                <h2 id="recognition-dialog-title">Reconocer incidente</h2>
+            </header>
+            <p>Registra quién toma responsabilidad del incidente seleccionado.</p>
+            <label for="recognition-operator">Nombre del operador</label>
+            <input id="recognition-operator" name="operador" type="text" minlength="2" maxlength="80" autocomplete="name" required>
+            <p class="recognition-error" role="alert" hidden></p>
+            <footer>
+                <button type="button" data-cancelar-reconocimiento>Cancelar</button>
+                <button type="submit">Confirmar reconocimiento</button>
+            </footer>
+        </form>
+    </dialog>
+
+    <script type="module" src="../js/paginas/monitoreo.js?v=20261120-gestion-incidentes"></script>
 </body>
 </html>

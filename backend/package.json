@@ -6,7 +6,7 @@
   "description": "Backend del Sistema de Comunicación Prioritaria",
   "scripts": {
     "start": "node src/servidor.js",
-    "dev": "node --watch src/servidor.js",
+    "dev": "node --watch-path=src src/servidor.js",
     "check": "node --check src/servidor.js"
   },
   "dependencies": {

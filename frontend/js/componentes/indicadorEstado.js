@@ -51,14 +51,17 @@ const crearTarjetaIncidente = (incidente, horno) => {
     const prioridad = normalizarPrioridad(incidente.prioridad);
     const esP0 = prioridad === "P0";
     const fechaInicio = obtenerFechaInicio(incidente);
-    const tarjeta = crearElemento("article", esP0 ? "emergency-card" : `alert-card priority-${prioridad.toLowerCase()}`);
+    const reconocido = incidente.estado === "reconocido";
+    const claseBase = esP0 ? "emergency-card" : `alert-card priority-${prioridad.toLowerCase()}`;
+    const tarjeta = crearElemento("article", reconocido ? `${claseBase} is-recognized` : claseBase);
     const encabezado = crearElemento("header");
     const titulo = crearElemento("div");
     const hora = crearElemento("time", "", fechaInicio.getTime() === 0 ? "Hora no disponible" : FORMATO_HORA.format(fechaInicio));
     const ubicacion = horno ? `${horno.area} · ${horno.nombre}` : "Área no identificada";
 
     tarjeta.dataset.prioridad = prioridad;
-    if (esP0) tarjeta.setAttribute("role", "alert");
+    tarjeta.dataset.incidenteId = incidente.id;
+    if (esP0 && !reconocido) tarjeta.setAttribute("role", "alert");
     titulo.append(
         crearElemento("p", "", `${prioridad} · ${NOMBRE_PRIORIDAD[prioridad]}`),
         crearElemento("h3", "", incidente.titulo || "Incidente activo")
@@ -78,29 +81,53 @@ const crearTarjetaIncidente = (incidente, horno) => {
         detalles.append(fila);
     });
 
-    tarjeta.append(encabezado, detalles);
-    if (esP0) {
-        const enlace = crearElemento("a", "", "Abrir protocolo de atención");
-        enlace.href = "pages/monitoreo.html";
-        tarjeta.append(enlace);
+    if (reconocido) {
+        const fechaReconocimiento = new Date(incidente.reconocidoEn);
+        const datosReconocimiento = [
+            ["Operador", incidente.operadorReconocimiento || "No registrado"],
+            ["Reconocido", Number.isNaN(fechaReconocimiento.getTime()) ? "Hora no disponible" : FORMATO_HORA.format(fechaReconocimiento)]
+        ];
+        datosReconocimiento.forEach(([etiqueta, valor]) => {
+            const fila = crearElemento("div");
+            fila.append(crearElemento("dt", "", etiqueta), crearElemento("dd", "", valor));
+            detalles.append(fila);
+        });
     }
+
+    tarjeta.append(encabezado, detalles);
+    const acciones = crearElemento("div", "incident-actions");
+    if (!reconocido) {
+        const enlace = crearElemento("a", "", "Reconocer incidente");
+        const parametros = new URLSearchParams({ horno: incidente.hornoId, incidente: incidente.id });
+        enlace.href = `pages/monitoreo.html?${parametros}`;
+        acciones.append(enlace);
+    }
+    if (acciones.children.length > 0) tarjeta.append(acciones);
     return tarjeta;
 };
 
 export const actualizarIndicadorIncidentes = (incidentes, hornos) => {
     const activos = obtenerIncidentesActivosOrdenados(incidentes);
     const emergencias = activos.filter(({ prioridad }) => prioridad === "P0");
+    const emergenciasSinReconocer = emergencias.filter(({ estado }) => !["reconocido", "reconocida"].includes(estado));
     const indicadorGlobal = document.querySelector("body > div > header > p[role='status']");
     const contador = document.querySelector(".incident-panel > header data");
     const lista = document.querySelector(".incident-list");
     const vacio = document.querySelector(".incident-empty");
 
     if (indicadorGlobal) {
-        indicadorGlobal.textContent = emergencias.length === 1
+        indicadorGlobal.dataset.emergencyState = emergenciasSinReconocer.length > 0
+            ? "unrecognized"
+            : emergencias.length > 0 ? "recognized" : "none";
+        indicadorGlobal.textContent = emergenciasSinReconocer.length === 1
             ? "Una emergencia activa"
-            : emergencias.length > 1
-                ? `${emergencias.length} emergencias activas`
-                : "Sin emergencias activas";
+            : emergenciasSinReconocer.length > 1
+                ? `${emergenciasSinReconocer.length} emergencias activas`
+                : emergencias.length === 1
+                    ? "Emergencia reconocida"
+                    : emergencias.length > 1
+                        ? `${emergencias.length} emergencias reconocidas`
+                        : "Sin emergencias activas";
     }
 
     if (contador) {
