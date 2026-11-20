@@ -5,8 +5,90 @@ const FORMATO_HORA = new Intl.DateTimeFormat("es-MX", {
     hour12: false
 });
 
+const ORDEN_PRIORIDAD = Object.freeze({ P0: 0, P1: 1, P2: 2, P3: 3 });
+const NOMBRE_PRIORIDAD = Object.freeze({
+    P0: "Emergencia",
+    P1: "Alerta crítica",
+    P2: "Advertencia",
+    P3: "Informativo"
+});
+const ESTADOS_FINALIZADOS = new Set(["resuelto", "cerrado"]);
+
+const normalizarPrioridad = (prioridad) =>
+    Object.hasOwn(ORDEN_PRIORIDAD, prioridad) ? prioridad : "P3";
+
+const obtenerFechaInicio = (incidente) => {
+    const fecha = new Date(incidente.inicio);
+    return Number.isNaN(fecha.getTime()) ? new Date(0) : fecha;
+};
+
+const crearElemento = (etiqueta, clase, texto) => {
+    const elemento = document.createElement(etiqueta);
+    if (clase) elemento.className = clase;
+    if (texto !== undefined) elemento.textContent = texto;
+    return elemento;
+};
+
+const formatearEstado = (estado = "activo") => ({
+    "sin-atender": "Sin atender",
+    reconocida: "Reconocida",
+    reconocido: "Reconocido",
+    activo: "Activo",
+    "en-atencion": "En atención",
+    normalizada: "Normalizada"
+}[estado] ?? estado.replaceAll("-", " "));
+
+export const obtenerIncidentesActivosOrdenados = (incidentes = []) =>
+    incidentes
+        .filter(({ estado }) => !ESTADOS_FINALIZADOS.has(estado))
+        .slice()
+        .sort((a, b) => {
+            const diferenciaPrioridad = (ORDEN_PRIORIDAD[a.prioridad] ?? 99) - (ORDEN_PRIORIDAD[b.prioridad] ?? 99);
+            return diferenciaPrioridad || obtenerFechaInicio(b) - obtenerFechaInicio(a);
+        });
+
+const crearTarjetaIncidente = (incidente, horno) => {
+    const prioridad = normalizarPrioridad(incidente.prioridad);
+    const esP0 = prioridad === "P0";
+    const fechaInicio = obtenerFechaInicio(incidente);
+    const tarjeta = crearElemento("article", esP0 ? "emergency-card" : `alert-card priority-${prioridad.toLowerCase()}`);
+    const encabezado = crearElemento("header");
+    const titulo = crearElemento("div");
+    const hora = crearElemento("time", "", fechaInicio.getTime() === 0 ? "Hora no disponible" : FORMATO_HORA.format(fechaInicio));
+    const ubicacion = horno ? `${horno.area} · ${horno.nombre}` : "Área no identificada";
+
+    tarjeta.dataset.prioridad = prioridad;
+    if (esP0) tarjeta.setAttribute("role", "alert");
+    titulo.append(
+        crearElemento("p", "", `${prioridad} · ${NOMBRE_PRIORIDAD[prioridad]}`),
+        crearElemento("h3", "", incidente.titulo || "Incidente activo")
+    );
+    if (fechaInicio.getTime() !== 0) hora.dateTime = fechaInicio.toISOString();
+    encabezado.append(titulo, hora);
+
+    const detalles = crearElemento("dl", "incident-details");
+    [
+        ["Prioridad", `${prioridad} · ${NOMBRE_PRIORIDAD[prioridad]}`],
+        ["Área", ubicacion],
+        ["Causa", incidente.titulo || "Sin causa registrada"],
+        ["Estado", formatearEstado(incidente.estado)]
+    ].forEach(([etiqueta, valor]) => {
+        const fila = crearElemento("div");
+        fila.append(crearElemento("dt", "", etiqueta), crearElemento("dd", "", valor));
+        detalles.append(fila);
+    });
+
+    tarjeta.append(encabezado, detalles);
+    if (esP0) {
+        const enlace = crearElemento("a", "", "Abrir protocolo de atención");
+        enlace.href = "pages/monitoreo.html";
+        tarjeta.append(enlace);
+    }
+    return tarjeta;
+};
+
 export const actualizarIndicadorIncidentes = (incidentes, hornos) => {
-    const activos = incidentes.filter(({ estado }) => estado !== "resuelto");
+    const activos = obtenerIncidentesActivosOrdenados(incidentes);
     const emergencias = activos.filter(({ prioridad }) => prioridad === "P0");
     const indicadorGlobal = document.querySelector("body > div > header > p[role='status']");
     const contador = document.querySelector(".incident-panel > header data");
@@ -26,48 +108,12 @@ export const actualizarIndicadorIncidentes = (incidentes, hornos) => {
         contador.textContent = activos.length === 1 ? "1 incidente" : `${activos.length} incidentes`;
     }
 
-    if (lista) lista.hidden = activos.length === 0;
+    if (lista) {
+        lista.hidden = activos.length === 0;
+        lista.replaceChildren(...activos.map((incidente) => {
+            const horno = hornos.find(({ id }) => id === incidente.hornoId);
+            return crearTarjetaIncidente(incidente, horno);
+        }));
+    }
     if (vacio) vacio.hidden = activos.length !== 0;
-
-    const emergencia = emergencias[0];
-    const tarjetaEmergencia = document.querySelector(".emergency-card");
-    if (tarjetaEmergencia) tarjetaEmergencia.hidden = !emergencia;
-
-    if (emergencia && tarjetaEmergencia) {
-        const horno = hornos.find(({ id }) => id === emergencia.hornoId);
-        const hora = tarjetaEmergencia.querySelector("time");
-        const ubicacion = tarjetaEmergencia.querySelector(".emergency-location");
-        const estado = [...tarjetaEmergencia.querySelectorAll("dl > div")]
-            .find((fila) => fila.querySelector("dt")?.textContent.trim() === "Estado")
-            ?.querySelector("dd");
-
-        if (hora) {
-            hora.dateTime = emergencia.inicio;
-            hora.textContent = FORMATO_HORA.format(new Date(emergencia.inicio));
-        }
-        if (ubicacion && horno) {
-            ubicacion.querySelector("span").textContent = horno.area;
-            ubicacion.querySelector("strong").textContent = horno.nombre;
-        }
-        if (estado) estado.textContent = emergencia.estado === "sin-atender" ? "Sin atender" : "Reconocida";
-    }
-
-    const alerta = activos.find(({ prioridad }) => prioridad === "P1");
-    const tarjetaAlerta = document.querySelector(".alert-card");
-    if (tarjetaAlerta) tarjetaAlerta.hidden = !alerta;
-
-    if (alerta && tarjetaAlerta) {
-        const horno = hornos.find(({ id }) => id === alerta.hornoId);
-        const hora = tarjetaAlerta.querySelector("time");
-        const detalle = tarjetaAlerta.querySelector(":scope > div");
-
-        if (hora) {
-            hora.dateTime = alerta.inicio;
-            hora.textContent = FORMATO_HORA.format(new Date(alerta.inicio));
-        }
-        if (horno && detalle) {
-            detalle.querySelector("span").textContent = `${horno.area} · ${horno.nombre}`;
-            detalle.querySelector("strong").textContent = `${horno.lectura.temperatura.toFixed(1)} °C / límite ${horno.temperatura.umbralCritico} °C`;
-        }
-    }
 };

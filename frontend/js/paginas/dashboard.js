@@ -1,7 +1,7 @@
 import { actualizarEstadoEncabezado, inicializarEncabezado } from "../componentes/encabezado.js";
 import { actualizarGraficasDashboard } from "../componentes/graficaTemperatura.js";
-import { actualizarIndicadorIncidentes } from "../componentes/indicadorEstado.js";
-import { actualizarTarjetaHorno } from "../componentes/tarjetaHorno.js";
+import { actualizarIndicadorIncidentes } from "../componentes/indicadorEstado.js?v=20261119-estados";
+import { actualizarTarjetaHorno } from "../componentes/tarjetaHorno.js?v=20261119-estados";
 import { estadoSistema, obtenerInstantaneaSistema } from "../servicios/datosSimulados.js";
 import { conectarBackend } from "../servicios/websocket.js";
 

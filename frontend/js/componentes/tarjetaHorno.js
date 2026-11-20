@@ -30,13 +30,19 @@ const obtenerEstadoEnlace = (nodo, edadSegundos) => {
     return "Conectado";
 };
 
-const obtenerEstadoHorno = (horno, nodo, edadSegundos) => {
-    if (edadSegundos >= 15) return "Sin comunicación";
-    if (horno.emergencia || horno.lectura.estado === "critico") return "Crítico";
-    if (nodo.rssi <= -75 || horno.lectura.estado === "advertencia") {
-        const causa = nodo.rssi <= -75 ? `Señal débil (${nodo.rssi} dBm)` : "KY-026 sobre umbral";
-        return `Advertencia · ${causa}`;
+const obtenerAdvertencias = (horno) => {
+    const advertencias = [];
+    if (horno.lectura.temperatura >= horno.temperatura.umbralCritico) {
+        advertencias.push("Temperatura sobre el límite");
     }
+    if (horno.lectura.ky026 >= 75) {
+        advertencias.push("Flama sobre el umbral");
+    }
+    return advertencias;
+};
+
+const obtenerEstadoHorno = (horno) => {
+    if (horno.emergencia || obtenerAdvertencias(horno).length > 0) return "Crítico";
     return "Normal";
 };
 
@@ -46,11 +52,13 @@ export const actualizarTarjetaHorno = (tarjeta, horno, nodo, ahora = new Date())
     const ultimoDato = new Date(nodo.ultimoDato);
     const edadSegundos = Math.max(0, Math.round((ahora - ultimoDato) / 1000));
     const estadoEnlace = obtenerEstadoEnlace(nodo, edadSegundos);
-    const estadoGeneral = obtenerEstadoHorno(horno, nodo, edadSegundos);
+    const datoDesactualizado = edadSegundos >= 15;
+    const estadoGeneral = obtenerEstadoHorno(horno);
     const encabezadoEstado = tarjeta.querySelector(":scope > header > p");
     const temperatura = buscarValor(tarjeta, "Temperatura")?.querySelector("data");
     const ky026 = buscarValor(tarjeta, "Sensor KY-026")?.querySelector("data");
-    const emergencia = buscarValor(tarjeta, "Emergencia");
+    const pulsadorEmergencia = buscarValor(tarjeta, "Pulsador de emergencia");
+    const advertencias = buscarValor(tarjeta, "Advertencias");
     const enlace = buscarValor(tarjeta, "Enlace");
     const tiempo = buscarValor(tarjeta, "Último dato")?.querySelector("time");
 
@@ -63,10 +71,27 @@ export const actualizarTarjetaHorno = (tarjeta, horno, nodo, ahora = new Date())
         ky026.value = horno.lectura.ky026;
         ky026.textContent = `${horno.lectura.ky026} % · Nivel ${obtenerNivelKy(horno.lectura.ky026)}`;
     }
-    if (emergencia) emergencia.textContent = horno.emergencia ? "Activa" : "No activa";
+    if (pulsadorEmergencia) pulsadorEmergencia.textContent = horno.emergencia ? "Activado" : "No activado";
+    if (advertencias) {
+        const causas = obtenerAdvertencias(horno);
+        advertencias.textContent = causas.length > 0 ? causas.join(" · ") : "Sin advertencias";
+    }
     if (enlace) enlace.textContent = `${estadoEnlace} · ${nodo.rssi} dBm`;
     if (tiempo) {
         tiempo.dateTime = ultimoDato.toISOString();
         tiempo.textContent = `Hace ${edadSegundos} s · ${FORMATO_HORA.format(ultimoDato)}`;
+    }
+
+    [temperatura, ky026, tiempo].forEach((elemento) => {
+        elemento?.classList.toggle("data-stale", datoDesactualizado);
+    });
+    enlace?.classList.toggle("data-offline", datoDesactualizado);
+    tarjeta.dataset.estadoOperativo = estadoGeneral;
+    tarjeta.dataset.estadoComunicacion = estadoEnlace;
+    tarjeta.dataset.lecturaDesactualizada = String(datoDesactualizado);
+    if (datoDesactualizado) {
+        tiempo?.setAttribute("title", `Última lectura recibida: ${ultimoDato.toLocaleString("es-MX")}`);
+    } else {
+        tiempo?.removeAttribute("title");
     }
 };
