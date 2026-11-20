@@ -1048,9 +1048,54 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
     padding: 4px 7px 8px 4px;
 }
 
+.incident-list[hidden] {
+    display: none;
+}
+
 .incident-list > .emergency-card,
 .incident-list > .alert-card {
     flex: 0 0 auto;
+}
+
+.incident-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 12px 0 0;
+}
+
+.incident-details > div {
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    background: rgba(7, 16, 24, 0.34);
+}
+
+.incident-details dt {
+    color: #c5d8e1;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.incident-details dd {
+    margin: 4px 0 0;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.alert-card.priority-p2 {
+    border-color: rgba(53, 207, 224, 0.55);
+    box-shadow: inset 4px 0 0 var(--color-accent);
+}
+
+.alert-card.priority-p3 {
+    border-color: var(--color-border-strong);
+    box-shadow: inset 4px 0 0 var(--color-text-muted);
 }
 
 .emergency-card {
@@ -1163,6 +1208,12 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
 .data-stale {
     color: #d0d8dc !important;
     filter: grayscale(0.7);
+}
+
+time.data-stale::before {
+    content: "Desactualizado · ";
+    color: var(--color-warning);
+    font-weight: 800;
 }
 
 .data-offline {

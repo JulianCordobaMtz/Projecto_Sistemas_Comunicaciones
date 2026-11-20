@@ -6,7 +6,7 @@
     <meta name="description" content="Dashboard del Sistema de Comunicación Prioritaria para monitorear hornos, emergencias y enlaces de comunicación.">
     <title>Centro de Control | Sistema de Comunicación Prioritaria</title>
     <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/componentes.css">
+    <link rel="stylesheet" href="css/componentes.css?v=20261119-estados">
     <link rel="stylesheet" href="css/monitoreo.css">
 </head>
 <body>
@@ -108,7 +108,8 @@
                         <dl>
                             <div><dt>Temperatura</dt><dd><data value="32.4">32.4 °C</data></dd></div>
                             <div><dt>Sensor KY-026</dt><dd><data value="18">18 % · Nivel bajo</data></dd></div>
-                            <div><dt>Emergencia</dt><dd>No activa</dd></div>
+                            <div><dt>Pulsador de emergencia</dt><dd>No activado</dd></div>
+                            <div><dt>Advertencias</dt><dd>Sin advertencias</dd></div>
                             <div><dt>Enlace</dt><dd>Conectado · −58 dBm</dd></div>
                             <div><dt>Último dato</dt><dd><time datetime="2026-11-12T14:35:07-06:00">Hace 1 s · 14:35:07</time></dd></div>
                         </dl>
@@ -144,7 +145,8 @@
                         <dl>
                             <div><dt>Temperatura</dt><dd><data value="41.8">41.8 °C</data></dd></div>
                             <div><dt>Sensor KY-026</dt><dd><data value="86">86 % · Nivel alto</data></dd></div>
-                            <div><dt>Emergencia</dt><dd>Activa</dd></div>
+                            <div><dt>Pulsador de emergencia</dt><dd>Activado</dd></div>
+                            <div><dt>Advertencias</dt><dd>Temperatura y flama sobre el umbral</dd></div>
                             <div><dt>Enlace</dt><dd>Conectado · −61 dBm</dd></div>
                             <div><dt>Último dato</dt><dd><time datetime="2026-11-12T14:35:06-06:00">Hace 2 s · 14:35:06</time></dd></div>
                         </dl>
@@ -180,7 +182,8 @@
                         <dl>
                             <div><dt>Temperatura</dt><dd><data value="29.6">29.6 °C</data></dd></div>
                             <div><dt>Sensor KY-026</dt><dd><data value="34">34 % · Nivel medio</data></dd></div>
-                            <div><dt>Emergencia</dt><dd>No activa</dd></div>
+                            <div><dt>Pulsador de emergencia</dt><dd>No activado</dd></div>
+                            <div><dt>Advertencias</dt><dd>Sin advertencias</dd></div>
                             <div><dt>Enlace</dt><dd>Señal débil · −76 dBm</dd></div>
                             <div><dt>Último dato</dt><dd><time datetime="2026-11-12T14:35:03-06:00">Hace 5 s · 14:35:03</time></dd></div>
                         </dl>
@@ -202,58 +205,7 @@
                     <p>La operación se encuentra dentro de los parámetros establecidos.</p>
                 </div>
 
-                <div class="incident-list">
-                <section class="emergency-card" role="alert" aria-labelledby="emergency-title">
-                    <header>
-                        <span class="emergency-icon" aria-hidden="true">
-                            <svg viewBox="0 0 48 48">
-                                <path d="M24 4 45 42H3Z" />
-                                <path d="M24 16v13M24 35v1" />
-                            </svg>
-                        </span>
-                        <div>
-                            <p>P0 · Atención inmediata</p>
-                            <h3 id="emergency-title">Emergencia activa</h3>
-                        </div>
-                        <time datetime="2026-11-11T14:34:51-06:00">14:34:51</time>
-                    </header>
-
-                    <div class="emergency-location">
-                        <span>Área 02</span>
-                        <strong>Horno central</strong>
-                    </div>
-
-                    <dl>
-                        <div>
-                            <dt>Prioridad</dt>
-                            <dd>P0</dd>
-                        </div>
-                        <div>
-                            <dt>Estado</dt>
-                            <dd>Sin atender</dd>
-                        </div>
-                    </dl>
-
-                    <a href="pages/monitoreo.html">Abrir protocolo de atención</a>
-                </section>
-
-                <section class="alert-card" aria-labelledby="active-alert-title">
-                    <header>
-                        <div>
-                            <p>P1 · Alerta crítica</p>
-                            <h3 id="active-alert-title">Temperatura sobre el límite</h3>
-                        </div>
-                        <time datetime="2026-11-11T14:34:26-06:00">14:34:26</time>
-                    </header>
-
-                    <p>Temperatura fuera del rango permitido.</p>
-
-                    <div>
-                        <span>Área 02 · Horno central</span>
-                        <strong>41.8 °C / límite 40 °C</strong>
-                    </div>
-                </section>
-                </div>
+                <div class="incident-list" aria-live="polite"></div>
 
                 <footer class="incident-panel-footer">
                     <p>Este panel muestra únicamente emergencias y alertas que requieren intervención.</p>
@@ -361,6 +313,6 @@
             </section>
         </main>
     </div>
-    <script type="module" src="js/paginas/dashboard.js"></script>
+    <script type="module" src="js/paginas/dashboard.js?v=20261119-estados"></script>
 </body>
 </html>
