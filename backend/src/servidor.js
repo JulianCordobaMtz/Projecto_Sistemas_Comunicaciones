@@ -25,6 +25,7 @@ colaPrioridad.iniciar(configuracion.intervaloProcesamiento);
 
 const temporizador = setInterval(() => {
     estadoSistema.simularSiguienteLectura();
+    estadoSistema.supervisarComunicaciones();
 }, configuracion.intervaloSimulacion);
 
 servidor.listen(configuracion.puerto, () => {

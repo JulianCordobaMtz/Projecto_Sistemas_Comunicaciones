@@ -3,7 +3,7 @@ const evento = (datos) => Object.freeze(datos);
 export const eventosHistorial = Object.freeze([
     evento({
         id: "evt-001", fecha: "2026-11-12T14:34:51-06:00", prioridad: "P0",
-        area: "Área 02", origen: "Área 02 · Horno central", evento: "Pulsador de emergencia activado",
+        area: "Área 02", origen: "Área 02 · Horno central", evento: "Emergencia médica activada",
         duracion: "42 s", duracionSegundos: 42, resultado: "Cerrado", operador: "Operador 01",
         reconocimiento: "2026-11-12T14:35:18-06:00", finalizacion: "2026-11-12T14:35:33-06:00",
         secuencia: ["Emergencia detectada y mensaje P0 generado.", "Mensaje recibido por la estación central.", "Operador reconoce el incidente.", "Condición normalizada y evento cerrado."]

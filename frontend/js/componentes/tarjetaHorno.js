@@ -43,6 +43,7 @@ const obtenerAdvertencias = (horno) => {
 
 const obtenerEstadoHorno = (horno) => {
     if (horno.emergencia || obtenerAdvertencias(horno).length > 0) return "Crítico";
+    if (horno.estadoHorno === "fuera-de-operacion") return "Fuera de operación";
     return "Normal";
 };
 
@@ -57,7 +58,8 @@ export const actualizarTarjetaHorno = (tarjeta, horno, nodo, ahora = new Date())
     const encabezadoEstado = tarjeta.querySelector(":scope > header > p");
     const temperatura = buscarValor(tarjeta, "Temperatura")?.querySelector("data");
     const ky026 = buscarValor(tarjeta, "Sensor KY-026")?.querySelector("data");
-    const pulsadorEmergencia = buscarValor(tarjeta, "Pulsador de emergencia");
+    const pulsadorEmergencia = buscarValor(tarjeta, "Emergencia médica");
+    const operacionHorno = buscarValor(tarjeta, "Estado del horno");
     const advertencias = buscarValor(tarjeta, "Advertencias");
     const enlace = buscarValor(tarjeta, "Enlace");
     const tiempo = buscarValor(tarjeta, "Último dato")?.querySelector("time");
@@ -71,7 +73,10 @@ export const actualizarTarjetaHorno = (tarjeta, horno, nodo, ahora = new Date())
         ky026.value = horno.lectura.ky026;
         ky026.textContent = `${horno.lectura.ky026} % · Nivel ${obtenerNivelKy(horno.lectura.ky026)}`;
     }
-    if (pulsadorEmergencia) pulsadorEmergencia.textContent = horno.emergencia ? "Activado" : "No activado";
+    if (pulsadorEmergencia) pulsadorEmergencia.textContent = horno.emergenciaMedica || horno.emergencia ? "Activada" : "No activada";
+    if (operacionHorno) operacionHorno.textContent = horno.estadoHorno === "fuera-de-operacion"
+        ? "Fuera de operación"
+        : "En operación";
     if (advertencias) {
         const causas = obtenerAdvertencias(horno);
         advertencias.textContent = causas.length > 0 ? causas.join(" · ") : "Sin advertencias";

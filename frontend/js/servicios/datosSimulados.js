@@ -19,7 +19,10 @@ export const estadoSistema = Object.freeze({
                 maxima: 33.1,
                 umbralCritico: 40
             }),
-            emergencia: false
+            emergencia: false,
+            emergenciaMedica: false,
+            atencionMedicaPresente: false,
+            estadoHorno: "en-operacion"
         }),
         Object.freeze({
             id: "horno-central",
@@ -33,7 +36,10 @@ export const estadoSistema = Object.freeze({
                 maxima: 42.1,
                 umbralCritico: 40
             }),
-            emergencia: true
+            emergencia: true,
+            emergenciaMedica: true,
+            atencionMedicaPresente: false,
+            estadoHorno: "en-operacion"
         }),
         Object.freeze({
             id: "horno-sur",
@@ -47,7 +53,10 @@ export const estadoSistema = Object.freeze({
                 maxima: 31.4,
                 umbralCritico: 40
             }),
-            emergencia: false
+            emergencia: false,
+            emergenciaMedica: false,
+            atencionMedicaPresente: false,
+            estadoHorno: "en-operacion"
         })
     ]),
     nodos: Object.freeze([
@@ -89,9 +98,9 @@ export const estadoSistema = Object.freeze({
         Object.freeze({
             id: "incidente-001",
             prioridad: "P0",
-            tipo: "emergencia",
+            tipo: "emergencia-medica",
             hornoId: "horno-central",
-            titulo: "Pulsador de emergencia activado",
+            titulo: "Emergencia médica",
             estado: "sin-atender",
             inicio: "2026-11-12T14:34:51-06:00"
         }),
@@ -154,7 +163,10 @@ export const establecerEstadoBackend = (datos) => {
                 maxima: Number(horno.temperatura),
                 umbralCritico: horno.umbrales?.temperaturaCritica ?? 40
             },
-            emergencia: Boolean(horno.emergencia)
+            emergencia: Boolean(horno.emergenciaMedica ?? horno.emergencia),
+            emergenciaMedica: Boolean(horno.emergenciaMedica ?? horno.emergencia),
+            atencionMedicaPresente: Boolean(horno.atencionMedicaPresente),
+            estadoHorno: horno.estadoHorno ?? "en-operacion"
         };
     });
 

@@ -542,6 +542,40 @@ section[aria-labelledby="active-condition-title"] > article {
     animation: incidente-monitoreo 1.35s ease-in-out infinite;
 }
 
+section[aria-labelledby="active-condition-title"] > article.is-recognized {
+    border-color: rgba(244, 185, 66, 0.68);
+    background: linear-gradient(135deg, rgba(244, 185, 66, 0.13), rgba(54, 38, 8, 0.48));
+    box-shadow: none;
+    animation: none;
+}
+
+section[aria-labelledby="active-condition-title"] > article.is-recognized header strong {
+    border-color: rgba(255, 222, 145, 0.68);
+    color: #fff2d1;
+    background: rgba(244, 185, 66, 0.18);
+}
+
+section[aria-labelledby="active-condition-title"] > article.is-normalized {
+    border-color: rgba(57, 217, 138, 0.68);
+    background: linear-gradient(135deg, rgba(57, 217, 138, 0.12), rgba(8, 48, 34, 0.45));
+    animation: none;
+}
+
+section[aria-labelledby="active-condition-title"] > article.is-normalized header strong {
+    border-color: rgba(137, 239, 185, 0.68);
+    color: #c9f9df;
+    background: rgba(57, 217, 138, 0.16);
+}
+
+section[aria-labelledby="active-condition-title"] article footer button[data-verificar-normalizacion] {
+    color: #062516;
+    background: #65e5a1;
+}
+
+section[aria-labelledby="active-condition-title"] article footer button[data-verificar-normalizacion]:hover {
+    background: #91f2be;
+}
+
 @keyframes incidente-monitoreo {
     50% {
         border-color: #ffd2d7;

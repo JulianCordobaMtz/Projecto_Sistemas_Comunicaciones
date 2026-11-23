@@ -50,9 +50,11 @@ const crearGraficaTemporal = ({ historial, minimo, maximo, unidad, nombres, etiq
         const desplazamiento = MAXIMO_MUESTRAS - historial.length;
         const puntos = historial.map((muestra, indice) => ({
             x: posicionX(indice + desplazamiento),
-            y: posicionY(muestra.valores[serieIndice]),
+            y: Number.isFinite(muestra.valores[serieIndice])
+                ? posicionY(muestra.valores[serieIndice])
+                : null,
             valor: muestra.valores[serieIndice]
-        }));
+        })).filter(({ y }) => y !== null);
         const ultimo = puntos.at(-1);
         const polilinea = puntos.map(({ x, y }) => `${x},${y}`).join(" ");
         const circulos = puntos.map(({ x, y }) =>
@@ -88,8 +90,12 @@ export const actualizarGraficasDashboard = ({ hornos }, ahora = new Date()) => {
     const contenedores = document.querySelectorAll("section[aria-labelledby='charts-title'] figure > div[role='img']");
     if (contenedores.length < 2) return;
 
-    agregarMuestra(historialTemperatura, hornos.map(({ lectura }) => lectura.temperatura), ahora);
-    agregarMuestra(historialKy026, hornos.map(({ lectura }) => lectura.ky026), ahora);
+    agregarMuestra(historialTemperatura, hornos.map(({ lectura, estadoHorno }) =>
+        estadoHorno === "fuera-de-operacion" ? null : lectura.temperatura
+    ), ahora);
+    agregarMuestra(historialKy026, hornos.map(({ lectura, estadoHorno }) =>
+        estadoHorno === "fuera-de-operacion" ? null : lectura.ky026
+    ), ahora);
     const nombres = hornos.map(({ area }) => area);
 
     contenedores[0].innerHTML = crearGraficaTemporal({

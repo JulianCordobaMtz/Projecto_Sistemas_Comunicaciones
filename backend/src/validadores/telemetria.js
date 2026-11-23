@@ -34,6 +34,15 @@ export const validarTelemetria = (datos) => {
     if (datos.emergencia !== undefined && typeof datos.emergencia !== "boolean") {
         errores.push("emergencia debe ser true o false");
     }
+    if (datos.emergenciaMedica !== undefined && typeof datos.emergenciaMedica !== "boolean") {
+        errores.push("emergenciaMedica debe ser true o false");
+    }
+    if (datos.atencionMedicaPresente !== undefined && typeof datos.atencionMedicaPresente !== "boolean") {
+        errores.push("atencionMedicaPresente debe ser true o false");
+    }
+    if (datos.estadoHorno !== undefined && !["en-operacion", "fuera-de-operacion"].includes(datos.estadoHorno)) {
+        errores.push("estadoHorno debe ser en-operacion o fuera-de-operacion");
+    }
     if (datos.timestamp !== undefined && Number.isNaN(Date.parse(datos.timestamp))) {
         errores.push("timestamp debe tener formato de fecha ISO válido");
     }
@@ -53,7 +62,9 @@ export const validarTelemetria = (datos) => {
         latencia: datos.latencia,
         perdidas: datos.perdidas,
         retransmisiones: datos.retransmisiones,
-        emergencia: datos.emergencia,
+        emergenciaMedica: datos.emergenciaMedica ?? datos.emergencia,
+        atencionMedicaPresente: datos.atencionMedicaPresente,
+        estadoHorno: datos.estadoHorno,
         timestamp: datos.timestamp ? new Date(datos.timestamp).toISOString() : new Date().toISOString()
     };
 };

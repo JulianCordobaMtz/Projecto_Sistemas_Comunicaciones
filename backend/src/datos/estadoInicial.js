@@ -11,17 +11,20 @@ export const crearEstadoInicial = () => {
             {
                 id: "horno-norte", area: "Área 01", nombre: "Horno norte", nodoId: "nodo-01",
                 temperatura: 32.4, ky026: 18, estado: "normal", emergencia: false,
-                umbrales: { temperaturaCritica: 40, ky026Alto: 75 }
+                emergenciaMedica: false, atencionMedicaPresente: false, estadoHorno: "en-operacion",
+                umbrales: { temperaturaCritica: 40, ky026Alto: 75, temperaturaExtrema: 50, ky026Extremo: 90 }
             },
             {
                 id: "horno-central", area: "Área 02", nombre: "Horno central", nodoId: "nodo-02",
                 temperatura: 41.8, ky026: 86, estado: "critico", emergencia: true,
-                umbrales: { temperaturaCritica: 40, ky026Alto: 75 }
+                emergenciaMedica: true, atencionMedicaPresente: false, estadoHorno: "en-operacion",
+                umbrales: { temperaturaCritica: 40, ky026Alto: 75, temperaturaExtrema: 50, ky026Extremo: 90 }
             },
             {
                 id: "horno-sur", area: "Área 03", nombre: "Horno sur", nodoId: "nodo-03",
                 temperatura: 29.6, ky026: 34, estado: "advertencia", emergencia: false,
-                umbrales: { temperaturaCritica: 40, ky026Alto: 75 }
+                emergenciaMedica: false, atencionMedicaPresente: false, estadoHorno: "en-operacion",
+                umbrales: { temperaturaCritica: 40, ky026Alto: 75, temperaturaExtrema: 50, ky026Extremo: 90 }
             }
         ],
         nodos: [
@@ -30,8 +33,8 @@ export const crearEstadoInicial = () => {
             { id: "nodo-03", nombre: "Nodo 03", area: "Horno sur", hornoId: "horno-sur", estado: "degradado", rssi: -76, latencia: 75, perdidas: 3.4, retransmisiones: 4, ultimoDato: ahora.toISOString() }
         ],
         incidentes: [
-            { id: "incidente-001", prioridad: "P0", tipo: "emergencia", hornoId: "horno-central", titulo: "Emergencia activa", estado: "sin-atender", inicio: new Date(ahora.getTime() - 42000).toISOString() },
-            { id: "incidente-002", prioridad: "P1", tipo: "alerta", hornoId: "horno-central", titulo: "Temperatura sobre el límite", estado: "activo", inicio: new Date(ahora.getTime() - 67000).toISOString() }
+            { id: "incidente-001", prioridad: "P0", tipo: "emergencia-medica", hornoId: "horno-central", titulo: "Emergencia médica", estado: "sin-atender", inicio: new Date(ahora.getTime() - 42000).toISOString() },
+            { id: "incidente-002", prioridad: "P1", tipo: "alerta-operativa", hornoId: "horno-central", titulo: "Temperatura sobre el límite", estado: "activo", inicio: new Date(ahora.getTime() - 67000).toISOString() }
         ],
         cola: [
             { prioridad: "P0", nombre: "Emergencia", pendientes: 0, latenciaPromedio: 0, procesados: 0, descartados: 0 },

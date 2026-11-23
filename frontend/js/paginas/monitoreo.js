@@ -2,10 +2,10 @@ import { actualizarEstadoEncabezado, inicializarEncabezado } from "../componente
 import {
     actualizarGraficasMonitoreo,
     registrarMuestrasMonitoreo
-} from "../componentes/graficaMonitoreo.js";
+} from "../componentes/graficaMonitoreo.js?v=20261122-protocolo-medico";
 import { estadoSistema, obtenerInstantaneaSistema } from "../servicios/datosSimulados.js";
 import { conectarBackend } from "../servicios/websocket.js";
-import { reconocerIncidente } from "../servicios/api.js";
+import { reconocerIncidente, verificarNormalizacion } from "../servicios/api.js?v=20261122-protocolo-medico";
 
 inicializarEncabezado(estadoSistema);
 
@@ -28,6 +28,11 @@ const formularioReconocimiento = dialogoReconocimiento.querySelector("form");
 const campoOperador = dialogoReconocimiento.querySelector("#recognition-operator");
 const errorReconocimiento = dialogoReconocimiento.querySelector(".recognition-error");
 let incidentePendienteId = null;
+const dialogoVerificacion = document.querySelector("#normalization-verification-dialog");
+const formularioVerificacion = dialogoVerificacion.querySelector("form");
+const campoResponsableVerificacion = dialogoVerificacion.querySelector("#verification-operator");
+const errorVerificacion = dialogoVerificacion.querySelector(".recognition-error");
+let incidenteVerificacionId = null;
 
 const textoNivel = (valor) => {
     if (valor >= 75) return "Alto";
@@ -37,6 +42,7 @@ const textoNivel = (valor) => {
 
 const textoEstado = (horno, nodo) => {
     if (horno.emergencia || horno.lectura.estado === "critico") return "Crítico";
+    if (horno.estadoHorno === "fuera-de-operacion") return "Fuera de operación";
     if (nodo.rssi <= -75 || horno.lectura.estado === "advertencia") return "Advertencia";
     return "Normal";
 };
@@ -115,6 +121,9 @@ const actualizarResumen = (horno, nodo, ahora) => {
     disponibilidadActual.textContent = operativo ? "Operativo" : "Sin comunicación";
     buscarValor(disponibilidad, "Sensor térmico").textContent = operativo ? "Operativo" : "Sin datos";
     buscarValor(disponibilidad, "KY-026").textContent = operativo ? "Operativo" : "Sin datos";
+    buscarValor(disponibilidad, "Estado del horno").textContent = horno.estadoHorno === "fuera-de-operacion"
+        ? "Fuera de operación"
+        : "En operación";
     const filaNodo = [...disponibilidad.querySelectorAll("dl > div")]
         .find((fila) => fila.querySelector("dt")?.textContent.startsWith("Nodo"));
     filaNodo.querySelector("dt").textContent = nodo.nombre;
@@ -129,7 +138,7 @@ const actualizarIncidente = (horno, nodo, incidentes, ahora) => {
     const articulo = seccion.querySelector("article[role='alert']");
     const vacio = seccion.querySelector(".incident-empty");
     const incidenteRegistrado = incidentes
-        .filter(({ hornoId }) => hornoId === horno.id)
+        .filter(({ hornoId, estado }) => hornoId === horno.id && !["resuelto", "cerrado"].includes(estado))
         .sort((a, b) => a.prioridad.localeCompare(b.prioridad))[0];
     const advertenciaComunicacion = nodo.rssi <= -75 ? {
         id: `advertencia-${nodo.id}`,
@@ -141,23 +150,31 @@ const actualizarIncidente = (horno, nodo, incidentes, ahora) => {
         inicio: inicioAdvertenciaComunicacion.toISOString()
     } : null;
     const incidente = incidenteRegistrado ?? advertenciaComunicacion;
-    const esComunicacion = incidente?.tipo === "comunicacion";
+    const esComunicacion = ["comunicacion", "sin-comunicacion"].includes(incidente?.tipo);
 
     articulo.hidden = !incidente;
     vacio.hidden = Boolean(incidente);
     seccion.classList.toggle("communication-warning", Boolean(esComunicacion));
     if (!incidente) {
+        articulo.classList.remove("is-recognized");
+        articulo.removeAttribute("data-incidente-id");
         seccion.querySelector(":scope > header time").textContent = "Sin eventos pendientes";
         return;
     }
 
     const reconocimientoLocal = esComunicacion ? reconocimientosLocales.get(incidente.id) : null;
+    const esEmergenciaMedica = incidente.tipo === "emergencia-medica";
+    const atencionPresente = ["atencion-presente", "atencion-presente-sin-reconocer"].includes(incidente.estado);
+    const pendienteVerificacion = incidente.estado === "pendiente-verificacion";
+    const normalizadoSinReconocer = incidente.estado === "normalizado-sin-reconocer";
     const reconocidoEn = esComunicacion
         ? reconocimientoLocal?.fecha
         : incidente.reconocidoEn ? new Date(incidente.reconocidoEn) : null;
     const operadorReconocimiento = esComunicacion
         ? reconocimientoLocal?.operador
         : incidente.operadorReconocimiento;
+    articulo.classList.toggle("is-recognized", Boolean(reconocidoEn));
+    articulo.classList.toggle("is-normalized", pendienteVerificacion || normalizadoSinReconocer || atencionPresente);
     const inicio = new Date(incidente.inicio);
     const tiempoActivo = Math.max(0, Math.floor((ahora - inicio) / 1000));
     const tiempoReconocido = reconocidoEn ? Math.max(0, Math.floor((ahora - reconocidoEn) / 1000)) : null;
@@ -171,18 +188,34 @@ const actualizarIncidente = (horno, nodo, incidentes, ahora) => {
     horaDeteccion.dateTime = inicio.toISOString();
     horaDeteccion.textContent = `Detectado a las ${FORMATO_HORA.format(inicio)}`;
     articulo.dataset.incidenteId = incidente.id;
+    articulo.dataset.incidenteTipo = incidente.tipo;
     articulo.querySelector("header p").textContent = prioridadTexto;
-    articulo.querySelector("header h3").textContent = `${incidente.tipo === "emergencia" ? "Emergencia activa" : incidente.titulo} en ${horno.nombre.toLocaleLowerCase("es-MX")}`;
-    articulo.querySelector("header strong").textContent = reconocidoEn
-        ? "Reconocida"
-        : esComunicacion ? "Advertencia activa" : "Activa sin reconocer";
+    const tituloCondicion = esEmergenciaMedica
+        ? "Emergencia médica"
+        : pendienteVerificacion || normalizadoSinReconocer
+        ? "Condición normalizada"
+        : incidente.titulo;
+    articulo.querySelector("header h3").textContent = `${tituloCondicion} en ${horno.nombre.toLocaleLowerCase("es-MX")}`;
+    articulo.querySelector("header strong").textContent = atencionPresente
+        ? reconocidoEn ? "Personal médico presente" : "Llegada confirmada · sin reconocer"
+        : pendienteVerificacion
+        ? "Pendiente de verificación"
+        : normalizadoSinReconocer
+            ? "Normalizada sin reconocer"
+            : reconocidoEn
+                ? "Reconocida"
+                : esComunicacion ? "Advertencia activa" : "Activa sin reconocer";
 
     const campos = articulo.querySelectorAll("dl > div");
     const etiquetas = esComunicacion
-        ? ["RSSI actual", "Umbral recomendado", "Tiempo activo", "Desde reconocimiento"]
-        : ["Temperatura", "Límite", "Tiempo activo", "Desde reconocimiento"];
+        ? ["RSSI actual", "Umbral recomendado", "Tiempo desde detección", "Desde reconocimiento"]
+        : esEmergenciaMedica
+            ? ["Tipo", "Respuesta médica", "Tiempo desde detección", "Desde reconocimiento"]
+        : ["Temperatura", "Límite", "Tiempo desde detección", "Desde reconocimiento"];
     const valores = esComunicacion
         ? [`${nodo.rssi} dBm`, "−70 dBm", `${tiempoActivo} s`, tiempoReconocido === null ? "—" : `${tiempoReconocido} s`]
+        : esEmergenciaMedica
+            ? ["Emergencia médica", atencionPresente ? "Personal presente" : reconocidoEn ? "En camino" : "Pendiente de coordinación", `${tiempoActivo} s`, tiempoReconocido === null ? "—" : `${tiempoReconocido} s`]
         : [`${horno.lectura.temperatura.toFixed(1)} °C`, `${horno.temperatura.umbralCritico.toFixed(1)} °C`, `${tiempoActivo} s`, tiempoReconocido === null ? "—" : `${tiempoReconocido} s`];
 
     campos.forEach((campo, indice) => {
@@ -191,26 +224,42 @@ const actualizarIncidente = (horno, nodo, incidentes, ahora) => {
     });
 
     const pasos = articulo.querySelectorAll(".alarm-lifecycle li");
+    const etiquetasPasos = esEmergenciaMedica
+        ? ["Solicitud activa", "Reconocida · personal en camino", "Personal médico presente"]
+        : ["Activa sin reconocer", "Reconocida", "Pendiente de verificación"];
+    pasos.forEach((paso, indice) => { paso.textContent = etiquetasPasos[indice]; });
     if (reconocidoEn) {
         pasos[0].removeAttribute("aria-current");
-        pasos[1].setAttribute("aria-current", "step");
+        pasos[1].toggleAttribute("aria-current", !pendienteVerificacion && !atencionPresente);
+        pasos[2].toggleAttribute("aria-current", pendienteVerificacion || atencionPresente);
     } else {
-        pasos[0].setAttribute("aria-current", "step");
+        pasos[0].toggleAttribute("aria-current", !normalizadoSinReconocer);
         pasos[1].removeAttribute("aria-current");
+        pasos[2].toggleAttribute("aria-current", normalizadoSinReconocer);
     }
-    const botonReconocer = articulo.querySelector("footer button:first-of-type");
+    const botonReconocer = articulo.querySelector("[data-reconocer-incidente]");
     botonReconocer.disabled = Boolean(reconocidoEn);
+    botonReconocer.hidden = Boolean(reconocidoEn);
     botonReconocer.textContent = reconocidoEn
         ? `Reconocido por ${operadorReconocimiento || "operador"}`
         : "Reconocer incidente";
-    const botonSonido = articulo.querySelector("footer button:nth-of-type(2)");
-    botonSonido.hidden = esComunicacion;
+    const botonVerificar = articulo.querySelector("[data-verificar-normalizacion]");
+    botonVerificar.hidden = !(pendienteVerificacion || (esEmergenciaMedica && atencionPresente && reconocidoEn));
+    botonVerificar.textContent = esEmergenciaMedica
+        ? "Confirmar traslado y cierre"
+        : "Verificar normalización";
+    const botonSonido = articulo.querySelector("[data-silenciar-sonido]");
+    botonSonido.hidden = esComunicacion || pendienteVerificacion || normalizadoSinReconocer || atencionPresente;
     botonSonido.textContent = sonidoSilenciado ? "Activar sonido" : "Silenciar sonido";
 };
 
 const actualizarEncabezadoEmergencia = (incidentes) => {
     const emergencias = incidentes.filter(({ prioridad, estado }) => prioridad === "P0" && !["resuelto", "cerrado"].includes(estado));
-    const sinReconocer = emergencias.filter(({ estado }) => !["reconocido", "reconocida"].includes(estado));
+    const normalizadasSinReconocer = emergencias.filter(({ estado }) => estado === "normalizado-sin-reconocer");
+    const pendientesVerificacion = emergencias.filter(({ estado }) => estado === "pendiente-verificacion");
+    const sinReconocer = emergencias.filter(({ reconocidoEn, estado }) =>
+        !reconocidoEn && estado !== "normalizado-sin-reconocer"
+    );
     const indicador = document.querySelector("body > div > header > p[role='status']");
 
     indicador.dataset.emergencyState = sinReconocer.length > 0
@@ -220,11 +269,15 @@ const actualizarEncabezadoEmergencia = (incidentes) => {
         ? "Una emergencia activa"
         : sinReconocer.length > 1
             ? `${sinReconocer.length} emergencias activas`
-            : emergencias.length === 1
-                ? "Emergencia reconocida"
-                : emergencias.length > 1
-                    ? `${emergencias.length} emergencias reconocidas`
-                    : "Sin emergencias activas";
+            : normalizadasSinReconocer.length > 0
+                ? "Normalización pendiente de reconocimiento"
+                : pendientesVerificacion.length > 0
+                    ? "Normalización pendiente de verificación"
+                    : emergencias.length === 1
+                        ? "Emergencia reconocida"
+                        : emergencias.length > 1
+                            ? `${emergencias.length} emergencias reconocidas`
+                            : "Sin emergencias activas";
 };
 
 const actualizarPagina = () => {
@@ -252,7 +305,7 @@ document.querySelector("section[aria-labelledby='selector-title'] [role='group']
     });
 
 const articuloIncidente = document.querySelector("section[aria-labelledby='active-condition-title'] article");
-articuloIncidente.querySelector("footer button:first-of-type").addEventListener("click", async (evento) => {
+articuloIncidente.querySelector("[data-reconocer-incidente]").addEventListener("click", () => {
     const incidenteId = articuloIncidente.dataset.incidenteId;
     if (!incidenteId) return;
     incidentePendienteId = incidenteId;
@@ -260,6 +313,33 @@ articuloIncidente.querySelector("footer button:first-of-type").addEventListener(
     errorReconocimiento.hidden = true;
     dialogoReconocimiento.showModal();
     campoOperador.focus();
+});
+
+articuloIncidente.querySelector("[data-verificar-normalizacion]").addEventListener("click", () => {
+    const incidenteId = articuloIncidente.dataset.incidenteId;
+    if (!incidenteId) return;
+
+    const instantanea = obtenerInstantaneaSistema(new Date());
+    const horno = instantanea.hornos.find(({ id }) => id === hornoSeleccionadoId);
+    const esEmergenciaMedica = articuloIncidente.dataset.incidenteTipo === "emergencia-medica";
+    incidenteVerificacionId = incidenteId;
+    formularioVerificacion.reset();
+    errorVerificacion.hidden = true;
+    dialogoVerificacion.querySelector("#verification-dialog-title").textContent = esEmergenciaMedica
+        ? "Confirmar traslado y cierre"
+        : "Verificar normalización";
+    dialogoVerificacion.querySelector("[data-verification-description]").textContent = esEmergenciaMedica
+        ? "Confirma que la persona fue trasladada fuera del área y que el lugar quedó seguro."
+        : "Confirma que el área fue revisada y que la condición se encuentra solucionada.";
+    const lecturas = dialogoVerificacion.querySelector(".verification-readings");
+    lecturas.hidden = esEmergenciaMedica;
+    dialogoVerificacion.querySelector("[data-verification-temperature]").textContent = `${horno.lectura.temperatura.toFixed(1)} °C`;
+    dialogoVerificacion.querySelector("[data-verification-ky026]").textContent = `${horno.lectura.ky026} %`;
+    formularioVerificacion.querySelector("button[type='submit']").textContent = esEmergenciaMedica
+        ? "Confirmar cierre de atención"
+        : "Confirmar normalización";
+    dialogoVerificacion.showModal();
+    campoResponsableVerificacion.focus();
 });
 
 dialogoReconocimiento.querySelector("[data-cancelar-reconocimiento]").addEventListener("click", () => {
@@ -295,9 +375,40 @@ formularioReconocimiento.addEventListener("submit", async (evento) => {
     }
 });
 
-articuloIncidente.querySelector("footer button:nth-of-type(2)").addEventListener("click", () => {
+articuloIncidente.querySelector("[data-silenciar-sonido]").addEventListener("click", () => {
     sonidoSilenciado = !sonidoSilenciado;
     actualizarPagina();
+});
+
+dialogoVerificacion.querySelector("[data-cancelar-verificacion]").addEventListener("click", () => {
+    incidenteVerificacionId = null;
+    dialogoVerificacion.close();
+});
+
+formularioVerificacion.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+    const operador = campoResponsableVerificacion.value.trim();
+    if (!incidenteVerificacionId || !operador) return;
+
+    const botonConfirmar = formularioVerificacion.querySelector("button[type='submit']");
+    botonConfirmar.disabled = true;
+    botonConfirmar.textContent = "Verificando…";
+    errorVerificacion.hidden = true;
+
+    try {
+        await verificarNormalizacion(incidenteVerificacionId, operador);
+        incidenteVerificacionId = null;
+        dialogoVerificacion.close();
+        actualizarPagina();
+    } catch (error) {
+        errorVerificacion.textContent = `No fue posible verificar la normalización: ${error.message}`;
+        errorVerificacion.hidden = false;
+    } finally {
+        botonConfirmar.disabled = false;
+        botonConfirmar.textContent = articuloIncidente.dataset.incidenteTipo === "emergencia-medica"
+            ? "Confirmar cierre de atención"
+            : "Confirmar normalización";
+    }
 });
 
 document.querySelector("#time-range").addEventListener("change", (evento) => {
