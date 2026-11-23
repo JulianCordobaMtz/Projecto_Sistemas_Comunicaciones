@@ -70,6 +70,15 @@ export const crearApp = () => {
             siguiente(error);
         }
     });
+    app.patch("/api/incidentes/:incidenteId/verificar-normalizacion", (solicitud, respuesta, siguiente) => {
+        try {
+            const operador = validarOperador(solicitud.body);
+            const estado = estadoSistema.verificarNormalizacion(solicitud.params.incidenteId, operador);
+            respuesta.json({ mensaje: "Normalización verificada", estado });
+        } catch (error) {
+            siguiente(error);
+        }
+    });
     app.post("/api/telemetria", (solicitud, respuesta, siguiente) => {
         try {
             const telemetria = validarTelemetria(solicitud.body);

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/componentes.css">
     <link rel="stylesheet" href="../css/monitoreo.css">
-    <link rel="stylesheet" href="../css/comunicaciones.css">
+    <link rel="stylesheet" href="../css/comunicaciones.css?v=20261122-condiciones-red">
 </head>
 <body>
     <aside aria-label="Navegación principal">
@@ -99,24 +99,9 @@
                     <p role="status">1 condición activa</p>
                 </header>
 
-                <article role="alert">
-                    <header>
-                        <div>
-                            <p>Advertencia de red</p>
-                            <h3>Enlace degradado en Nodo 03</h3>
-                        </div>
-                        <time datetime="2026-11-12T14:34:42-06:00">14:34:42</time>
-                    </header>
-                    <p>La intensidad de señal disminuyó y aumentaron las retransmisiones. Los mensajes críticos mantienen atención prioritaria.</p>
-                    <dl>
-                        <div><dt>Origen</dt><dd>Nodo 03 · Horno sur</dd></div>
-                        <div><dt>RSSI</dt><dd>−76 dBm</dd></div>
-                        <div><dt>Retransmisiones</dt><dd>4</dd></div>
-                        <div><dt>Mensajes críticos pendientes</dt><dd>0</dd></div>
-                    </dl>
-                </article>
+                <div class="network-condition-list" aria-live="polite"></div>
 
-                <div hidden>
+                <div class="network-condition-empty" hidden>
                     <strong>Sin congestión ni fallos activos</strong>
                     <p>La red opera dentro de los parámetros establecidos.</p>
                 </div>
@@ -262,6 +247,6 @@
             </section>
         </main>
     </div>
-    <script type="module" src="../js/paginas/comunicaciones.js"></script>
+    <script type="module" src="../js/paginas/comunicaciones.js?v=20261122-condiciones-red"></script>
 </body>
 </html>

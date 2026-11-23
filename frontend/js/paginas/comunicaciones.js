@@ -74,27 +74,63 @@ const actualizarResumen = (nodos, ahora) => {
 
 const actualizarCongestion = (nodos, ahora) => {
     const seccion = document.querySelector("section[aria-labelledby='congestion-title']");
-    const articulo = seccion.querySelector(":scope > article");
-    const vacio = seccion.querySelector(":scope > div");
-    const afectados = nodos.filter((nodo) => estadoNodo(nodo, ahora).clave !== "estable");
-    const nodo = afectados[0];
+    const lista = seccion.querySelector(".network-condition-list");
+    const vacio = seccion.querySelector(".network-condition-empty");
+    const afectados = nodos.map((nodo) => ({ nodo, estado: estadoNodo(nodo, ahora) }))
+        .filter(({ estado }) => estado.clave !== "estable");
     const contador = seccion.querySelector(":scope > header > p[role='status']");
 
     contador.textContent = `${afectados.length} ${afectados.length === 1 ? "condición activa" : "condiciones activas"}`;
-    articulo.hidden = !nodo;
-    vacio.hidden = Boolean(nodo);
-    if (!nodo) return;
+    lista.hidden = afectados.length === 0;
+    vacio.hidden = afectados.length !== 0;
 
-    const horno = estadoSistema.hornos.find(({ nodoId }) => nodoId === nodo.id);
-    articulo.querySelector("h3").textContent = `Enlace degradado en ${nodo.nombre}`;
-    const tiempo = articulo.querySelector("time");
-    tiempo.dateTime = inicioCondicionRed.toISOString();
-    tiempo.textContent = FORMATO_HORA.format(inicioCondicionRed);
-    const campos = articulo.querySelectorAll("dl > div dd");
-    campos[0].textContent = `${nodo.nombre} · ${horno.area}`;
-    campos[1].textContent = `${nodo.rssi} dBm`;
-    campos[2].textContent = nodo.retransmisiones;
-    campos[3].textContent = "0";
+    const tarjetas = afectados.map(({ nodo, estado }) => {
+        const horno = estadoSistema.hornos.find(({ nodoId }) => nodoId === nodo.id);
+        const sinComunicacion = estado.clave === "sin-comunicacion";
+        const articulo = document.createElement("article");
+        const encabezado = document.createElement("header");
+        const titulo = document.createElement("div");
+        const categoria = document.createElement("p");
+        const nombre = document.createElement("h3");
+        const tiempo = document.createElement("time");
+        const descripcion = document.createElement("p");
+        const detalles = document.createElement("dl");
+        const fechaCondicion = sinComunicacion
+            ? new Date(new Date(nodo.ultimoDato).getTime() + 15_000)
+            : inicioCondicionRed;
+
+        articulo.dataset.estado = estado.clave;
+        if (sinComunicacion) articulo.setAttribute("role", "alert");
+        categoria.textContent = sinComunicacion ? "Falla de comunicación" : "Advertencia de red";
+        nombre.textContent = sinComunicacion
+            ? `Sin comunicación con ${nodo.nombre}`
+            : `Enlace degradado en ${nodo.nombre}`;
+        tiempo.dateTime = fechaCondicion.toISOString();
+        tiempo.textContent = FORMATO_HORA.format(fechaCondicion);
+        descripcion.textContent = sinComunicacion
+            ? `El nodo no entrega telemetría desde hace ${estado.edad} segundos. La última lectura se conserva hasta recuperar el enlace.`
+            : "La señal o las métricas de transmisión están fuera del rango recomendado; el nodo continúa enviando información.";
+        titulo.append(categoria, nombre);
+        encabezado.append(titulo, tiempo);
+
+        [
+            ["Origen", `${nodo.nombre} · ${horno.area}`],
+            ["Estado", estado.texto],
+            ["RSSI", `${nodo.rssi} dBm`],
+            ["Último paquete", `Hace ${estado.edad} s`]
+        ].forEach(([etiqueta, valor]) => {
+            const fila = document.createElement("div");
+            const termino = document.createElement("dt");
+            const dato = document.createElement("dd");
+            termino.textContent = etiqueta;
+            dato.textContent = valor;
+            fila.append(termino, dato);
+            detalles.append(fila);
+        });
+        articulo.append(encabezado, descripcion, detalles);
+        return articulo;
+    });
+    lista.replaceChildren(...tarjetas);
 };
 
 const actualizarTopologia = (nodos, ahora) => {

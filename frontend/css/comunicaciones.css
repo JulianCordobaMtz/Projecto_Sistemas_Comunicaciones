@@ -127,12 +127,27 @@ section[aria-labelledby="congestion-title"] > header > p[role="status"] {
     font-weight: 800;
 }
 
-section[aria-labelledby="congestion-title"] > article {
+.network-condition-list {
+    display: grid;
+    gap: 16px;
+}
+
+.network-condition-list[hidden] {
+    display: none;
+}
+
+.network-condition-list > article {
     padding: 22px;
     border: 2px solid rgba(255, 190, 85, 0.72);
     border-radius: var(--radius-md);
     background: linear-gradient(135deg, rgba(255, 190, 85, 0.15), rgba(55, 37, 8, 0.4));
     box-shadow: inset 5px 0 0 var(--color-warning);
+}
+
+.network-condition-list > article[data-estado="sin-comunicacion"] {
+    border-color: rgba(255, 92, 108, 0.78);
+    background: linear-gradient(135deg, rgba(255, 92, 108, 0.16), rgba(55, 10, 16, 0.42));
+    box-shadow: inset 5px 0 0 var(--color-danger);
 }
 
 section[aria-labelledby="congestion-title"] article > header {

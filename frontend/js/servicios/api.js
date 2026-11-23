@@ -21,3 +21,8 @@ export const cerrarIncidente = (incidenteId, operador) => enviar(
     `/incidentes/${encodeURIComponent(incidenteId)}/cerrar`,
     { method: "PATCH", body: JSON.stringify({ operador }) }
 );
+
+export const verificarNormalizacion = (incidenteId, operador) => enviar(
+    `/incidentes/${encodeURIComponent(incidenteId)}/verificar-normalizacion`,
+    { method: "PATCH", body: JSON.stringify({ operador }) }
+);

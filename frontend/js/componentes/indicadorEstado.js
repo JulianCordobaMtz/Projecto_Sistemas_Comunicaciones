@@ -35,7 +35,11 @@ const formatearEstado = (estado = "activo") => ({
     reconocido: "Reconocido",
     activo: "Activo",
     "en-atencion": "En atención",
-    normalizada: "Normalizada"
+    normalizada: "Normalizada",
+    "normalizado-sin-reconocer": "Normalizada · pendiente de reconocimiento",
+    "pendiente-verificacion": "Pendiente de verificación",
+    "atencion-presente-sin-reconocer": "Personal médico presente · pendiente de reconocimiento",
+    "atencion-presente": "Personal médico presente · pendiente de cierre"
 }[estado] ?? estado.replaceAll("-", " "));
 
 export const obtenerIncidentesActivosOrdenados = (incidentes = []) =>
@@ -51,9 +55,15 @@ const crearTarjetaIncidente = (incidente, horno) => {
     const prioridad = normalizarPrioridad(incidente.prioridad);
     const esP0 = prioridad === "P0";
     const fechaInicio = obtenerFechaInicio(incidente);
-    const reconocido = incidente.estado === "reconocido";
+    const reconocido = Boolean(incidente.reconocidoEn);
+    const pendienteVerificacion = incidente.estado === "pendiente-verificacion";
+    const atencionMedicaPresente = incidente.tipo === "emergencia-medica"
+        && incidente.estado === "atencion-presente";
     const claseBase = esP0 ? "emergency-card" : `alert-card priority-${prioridad.toLowerCase()}`;
-    const tarjeta = crearElemento("article", reconocido ? `${claseBase} is-recognized` : claseBase);
+    const clasesEstado = [claseBase];
+    if (reconocido) clasesEstado.push("is-recognized");
+    if (pendienteVerificacion || atencionMedicaPresente || incidente.estado === "normalizado-sin-reconocer") clasesEstado.push("is-normalized");
+    const tarjeta = crearElemento("article", clasesEstado.join(" "));
     const encabezado = crearElemento("header");
     const titulo = crearElemento("div");
     const hora = crearElemento("time", "", fechaInicio.getTime() === 0 ? "Hora no disponible" : FORMATO_HORA.format(fechaInicio));
@@ -101,6 +111,13 @@ const crearTarjetaIncidente = (incidente, horno) => {
         const parametros = new URLSearchParams({ horno: incidente.hornoId, incidente: incidente.id });
         enlace.href = `pages/monitoreo.html?${parametros}`;
         acciones.append(enlace);
+    } else if (pendienteVerificacion || atencionMedicaPresente) {
+        const parametros = new URLSearchParams({ horno: incidente.hornoId, incidente: incidente.id });
+        const enlace = crearElemento("a", "", atencionMedicaPresente
+            ? "Confirmar traslado y cierre"
+            : "Verificar normalización");
+        enlace.href = `pages/monitoreo.html?${parametros}`;
+        acciones.append(enlace);
     }
     if (acciones.children.length > 0) tarjeta.append(acciones);
     return tarjeta;
@@ -109,7 +126,11 @@ const crearTarjetaIncidente = (incidente, horno) => {
 export const actualizarIndicadorIncidentes = (incidentes, hornos) => {
     const activos = obtenerIncidentesActivosOrdenados(incidentes);
     const emergencias = activos.filter(({ prioridad }) => prioridad === "P0");
-    const emergenciasSinReconocer = emergencias.filter(({ estado }) => !["reconocido", "reconocida"].includes(estado));
+    const normalizadasSinReconocer = emergencias.filter(({ estado }) => estado === "normalizado-sin-reconocer");
+    const pendientesVerificacion = emergencias.filter(({ estado }) => estado === "pendiente-verificacion");
+    const emergenciasSinReconocer = emergencias.filter(({ reconocidoEn, estado }) =>
+        !reconocidoEn && estado !== "normalizado-sin-reconocer"
+    );
     const indicadorGlobal = document.querySelector("body > div > header > p[role='status']");
     const contador = document.querySelector(".incident-panel > header data");
     const lista = document.querySelector(".incident-list");
@@ -123,11 +144,15 @@ export const actualizarIndicadorIncidentes = (incidentes, hornos) => {
             ? "Una emergencia activa"
             : emergenciasSinReconocer.length > 1
                 ? `${emergenciasSinReconocer.length} emergencias activas`
-                : emergencias.length === 1
-                    ? "Emergencia reconocida"
-                    : emergencias.length > 1
-                        ? `${emergencias.length} emergencias reconocidas`
-                        : "Sin emergencias activas";
+                : normalizadasSinReconocer.length > 0
+                    ? "Normalización pendiente de reconocimiento"
+                    : pendientesVerificacion.length > 0
+                        ? "Normalización pendiente de verificación"
+                        : emergencias.length === 1
+                            ? "Emergencia reconocida"
+                            : emergencias.length > 1
+                                ? `${emergencias.length} emergencias reconocidas`
+                                : "Sin emergencias activas";
     }
 
     if (contador) {

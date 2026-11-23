@@ -17,6 +17,7 @@ const agregar = (lista, muestra) => {
 
 export const registrarMuestrasMonitoreo = (hornos, ahora = new Date()) => {
     hornos.forEach((horno) => {
+        if (horno.estadoHorno === "fuera-de-operacion") return;
         const historial = obtenerHistorial(horno.id);
         agregar(historial.temperatura, { tiempo: ahora, valor: horno.lectura.temperatura });
         agregar(historial.ky026, { tiempo: ahora, valor: horno.lectura.ky026 });
@@ -75,6 +76,13 @@ const crearGrafica = ({ muestras, minimo, maximo, umbral, unidad, etiqueta, peri
 export const actualizarGraficasMonitoreo = (horno, periodoSegundos = 30) => {
     const contenedores = document.querySelectorAll("section[aria-labelledby='trends-title'] figure > div[role='img']");
     if (!horno || contenedores.length < 2) return;
+
+    if (horno.estadoHorno === "fuera-de-operacion") {
+        contenedores.forEach((contenedor) => {
+            contenedor.innerHTML = "<p>Horno fuera de operación · No se registran muestras operativas</p>";
+        });
+        return;
+    }
 
     const historial = obtenerHistorial(horno.id);
     contenedores[0].innerHTML = crearGrafica({

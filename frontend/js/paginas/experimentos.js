@@ -36,8 +36,21 @@ const htmlSeguro = (valor) => String(valor ?? "").replace(/[&<>"']/g, (caracter)
 const convertirIncidenteEnEvento = (incidente, hornos, ahora = new Date()) => {
     const horno = hornos.find(({ id }) => id === incidente.hornoId);
     const inicio = new Date(incidente.inicio);
-    const duracionSegundos = Number.isNaN(inicio.getTime()) ? 0 : Math.max(0, Math.floor((ahora - inicio) / 1000));
-    const operador = incidente.operadorReconocimiento || "Pendiente";
+    const finalizacion = incidente.finalizacion ? new Date(incidente.finalizacion) : null;
+    const referenciaDuracion = finalizacion && !Number.isNaN(finalizacion.getTime()) ? finalizacion : ahora;
+    const duracionSegundos = Number.isFinite(incidente.duracionSegundos)
+        ? incidente.duracionSegundos
+        : Number.isNaN(inicio.getTime()) ? 0 : Math.max(0, Math.floor((referenciaDuracion - inicio) / 1000));
+    const resuelto = ["resuelto", "cerrado"].includes(incidente.estado);
+    const pendienteVerificacion = incidente.estado === "pendiente-verificacion";
+    const normalizadoSinReconocer = incidente.estado === "normalizado-sin-reconocer";
+    const atencionPresente = ["atencion-presente", "atencion-presente-sin-reconocer"].includes(incidente.estado);
+    const esEmergenciaMedica = incidente.tipo === "emergencia-medica";
+    const operadorReconocimiento = incidente.operadorReconocimiento || (normalizadoSinReconocer ? "Pendiente" : "Sin reconocimiento");
+    const operadorVerificacion = incidente.operadorVerificacion || null;
+    const operador = operadorVerificacion
+        ? `${operadorReconocimiento} · Verificó: ${operadorVerificacion}`
+        : operadorReconocimiento;
     const reconocido = Boolean(incidente.reconocidoEn);
 
     return {
@@ -49,13 +62,29 @@ const convertirIncidenteEnEvento = (incidente, hornos, ahora = new Date()) => {
         evento: incidente.titulo || "Incidente activo",
         duracion: formatearDuracion(duracionSegundos),
         duracionSegundos,
-        resultado: reconocido ? "Reconocido" : "Activo",
+        resultado: resuelto
+            ? esEmergenciaMedica ? "Atención médica concluida" : "Normalizado y verificado"
+            : atencionPresente
+                ? reconocido ? "Personal médico presente · pendiente de cierre" : "Personal médico presente · sin reconocer"
+            : pendienteVerificacion
+                ? "Pendiente de verificación"
+                : normalizadoSinReconocer
+                    ? "Normalizada sin reconocer"
+                    : reconocido ? "Reconocido" : "Activo",
         operador,
         reconocimiento: incidente.reconocidoEn || null,
+        normalizacion: incidente.normalizadoEn || null,
         finalizacion: incidente.finalizacion || null,
-        secuencia: reconocido
-            ? ["Incidente detectado.", "Mensaje recibido por la estación central.", `Incidente reconocido por ${operador}.`]
-            : ["Incidente detectado.", "Mensaje recibido por la estación central.", "Pendiente de reconocimiento."]
+        secuencia: [
+            "Incidente detectado.",
+            "Mensaje recibido por la estación central.",
+            reconocido ? `Incidente reconocido por ${operadorReconocimiento}.` : "Pendiente de reconocimiento por un operador.",
+            ...(incidente.llegadaAtencionEn ? ["Llegada del personal médico confirmada desde el área."] : []),
+            ...(incidente.normalizadoEn ? ["Los sensores reportaron valores dentro del rango normal."] : []),
+            ...(resuelto ? [esEmergenciaMedica
+                ? `Traslado y cierre confirmados por ${operadorVerificacion}.`
+                : `Normalización verificada por ${operadorVerificacion}.`] : [])
+        ]
     };
 };
 
@@ -115,7 +144,9 @@ const renderizarDetalle = (evento) => {
         dd.textContent = valores[indice];
     });
 
-    const tiempos = [evento.fecha, evento.fecha, evento.reconocimiento, evento.finalizacion];
+    const tiempos = evento.normalizacion
+        ? [evento.fecha, evento.fecha, evento.reconocimiento, evento.normalizacion, evento.finalizacion]
+        : [evento.fecha, evento.fecha, evento.reconocimiento, evento.finalizacion];
     const lista = articulos[1].querySelector("ol");
     lista.innerHTML = evento.secuencia.map((descripcion, indice) => `
         <li>
@@ -179,7 +210,6 @@ const actualizarResumen = () => {
 
 const integrarIncidentesActuales = (datos) => {
     const actuales = (datos.incidentes || [])
-        .filter(({ estado }) => !["resuelto", "cerrado"].includes(estado))
         .map((incidente) => convertirIncidenteEnEvento(incidente, datos.hornos || []));
 
     eventosOperativos = [...actuales, ...eventosHistorial];

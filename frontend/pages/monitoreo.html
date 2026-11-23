@@ -6,8 +6,8 @@
     <meta name="description" content="Monitoreo detallado de hornos y sensores del Sistema de Comunicación Prioritaria.">
     <title>Monitoreo | Sistema de Comunicación Prioritaria</title>
     <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/componentes.css?v=20261120-estado-emergencia">
-    <link rel="stylesheet" href="../css/monitoreo.css">
+    <link rel="stylesheet" href="../css/componentes.css?v=20261122-protocolo-medico">
+    <link rel="stylesheet" href="../css/monitoreo.css?v=20261122-protocolo-medico">
 </head>
 <body>
     <aside aria-label="Navegación principal">
@@ -133,6 +133,7 @@
                         <dl>
                             <div><dt>Sensor térmico</dt><dd>Operativo</dd></div>
                             <div><dt>KY-026</dt><dd>Operativo</dd></div>
+                            <div><dt>Estado del horno</dt><dd>En operación</dd></div>
                             <div><dt>Nodo 02</dt><dd>Conectado</dd></div>
                             <div><dt>Frecuencia de lectura</dt><dd>1 segundo</dd></div>
                             <div><dt>Último paquete</dt><dd>Hace 1 s</dd></div>
@@ -200,16 +201,18 @@
                     <dl>
                         <div><dt>Temperatura</dt><dd>41.8 °C</dd></div>
                         <div><dt>Límite</dt><dd>40.0 °C</dd></div>
-                        <div><dt>Tiempo activo</dt><dd>42 s</dd></div>
+                        <div><dt>Tiempo desde detección</dt><dd>42 s</dd></div>
                         <div><dt>Desde reconocimiento</dt><dd>—</dd></div>
                     </dl>
                     <ol class="alarm-lifecycle" aria-label="Ciclo de la alarma">
                         <li aria-current="step">Activa sin reconocer</li>
                         <li>Reconocida</li>
+                        <li>Pendiente de verificación</li>
                     </ol>
                     <footer>
-                        <button type="button">Reconocer incidente</button>
-                        <button type="button">Silenciar sonido</button>
+                        <button type="button" data-reconocer-incidente>Reconocer incidente</button>
+                        <button type="button" data-verificar-normalizacion hidden>Verificar normalización</button>
+                        <button type="button" data-silenciar-sonido>Silenciar sonido</button>
                         <a href="experimentos.html">Consultar historial</a>
                     </footer>
                 </article>
@@ -237,6 +240,27 @@
         </form>
     </dialog>
 
-    <script type="module" src="../js/paginas/monitoreo.js?v=20261120-gestion-incidentes"></script>
+    <dialog id="normalization-verification-dialog" aria-labelledby="verification-dialog-title">
+        <form method="dialog">
+            <header>
+                <p>Comprobación operativa</p>
+                <h2 id="verification-dialog-title">Verificar normalización</h2>
+            </header>
+            <p data-verification-description>Confirma que el área fue revisada y que la condición se encuentra solucionada.</p>
+            <dl class="verification-readings">
+                <div><dt>Temperatura actual</dt><dd data-verification-temperature>—</dd></div>
+                <div><dt>KY-026 actual</dt><dd data-verification-ky026>—</dd></div>
+            </dl>
+            <label for="verification-operator">Nombre del responsable</label>
+            <input id="verification-operator" name="operador" type="text" minlength="2" maxlength="80" autocomplete="name" required>
+            <p class="recognition-error" role="alert" hidden></p>
+            <footer>
+                <button type="button" data-cancelar-verificacion>Cancelar</button>
+                <button type="submit">Confirmar normalización</button>
+            </footer>
+        </form>
+    </dialog>
+
+    <script type="module" src="../js/paginas/monitoreo.js?v=20261122-protocolo-medico"></script>
 </body>
 </html>

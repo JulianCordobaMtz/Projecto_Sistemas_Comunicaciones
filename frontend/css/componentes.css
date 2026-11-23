@@ -1141,7 +1141,47 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
     box-shadow: none;
 }
 
-#incident-recognition-dialog {
+.emergency-card.is-normalized,
+.alert-card.is-normalized {
+    animation: none;
+    border-color: rgba(57, 217, 138, 0.55);
+    background: rgba(22, 66, 47, 0.45);
+    box-shadow: inset 4px 0 0 var(--color-success);
+}
+
+.verification-readings {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+}
+
+.verification-readings[hidden] {
+    display: none;
+}
+
+.verification-readings > div {
+    padding: 11px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: rgba(7, 16, 24, 0.48);
+}
+
+.verification-readings dt {
+    color: var(--color-text-muted);
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.verification-readings dd {
+    margin: 5px 0 0;
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-weight: 700;
+}
+
+#incident-recognition-dialog,
+#normalization-verification-dialog {
     width: min(460px, calc(100vw - 40px));
     padding: 0;
     border: 1px solid var(--color-border-strong);
@@ -1151,18 +1191,21 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
 }
 
-#incident-recognition-dialog::backdrop {
+#incident-recognition-dialog::backdrop,
+#normalization-verification-dialog::backdrop {
     background: rgba(2, 8, 13, 0.76);
     backdrop-filter: blur(4px);
 }
 
-#incident-recognition-dialog form {
+#incident-recognition-dialog form,
+#normalization-verification-dialog form {
     display: grid;
     gap: 14px;
     padding: 24px;
 }
 
-#incident-recognition-dialog header p {
+#incident-recognition-dialog header p,
+#normalization-verification-dialog header p {
     color: var(--color-primary);
     font-size: 0.72rem;
     font-weight: 800;
@@ -1170,21 +1213,25 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
     letter-spacing: 0.1em;
 }
 
-#incident-recognition-dialog h2 {
+#incident-recognition-dialog h2,
+#normalization-verification-dialog h2 {
     margin-top: 4px;
 }
 
-#incident-recognition-dialog form > p {
+#incident-recognition-dialog form > p,
+#normalization-verification-dialog form > p {
     color: var(--color-text-muted);
     font-size: 0.82rem;
 }
 
-#incident-recognition-dialog label {
+#incident-recognition-dialog label,
+#normalization-verification-dialog label {
     font-size: 0.78rem;
     font-weight: 700;
 }
 
-#incident-recognition-dialog input {
+#incident-recognition-dialog input,
+#normalization-verification-dialog input {
     min-height: 44px;
     padding: 9px 11px;
     border: 1px solid var(--color-border-strong);
@@ -1194,18 +1241,21 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
     font: inherit;
 }
 
-#incident-recognition-dialog .recognition-error {
+#incident-recognition-dialog .recognition-error,
+#normalization-verification-dialog .recognition-error {
     color: #ffb6bd;
     font-weight: 700;
 }
 
-#incident-recognition-dialog footer {
+#incident-recognition-dialog footer,
+#normalization-verification-dialog footer {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
 
-#incident-recognition-dialog footer button {
+#incident-recognition-dialog footer button,
+#normalization-verification-dialog footer button {
     min-height: 40px;
     padding: 8px 14px;
     border: 1px solid var(--color-border-strong);
@@ -1216,13 +1266,15 @@ section[aria-labelledby="areas-title"] article:nth-child(3) > header > p {
     cursor: pointer;
 }
 
-#incident-recognition-dialog footer button[type="submit"] {
+#incident-recognition-dialog footer button[type="submit"],
+#normalization-verification-dialog footer button[type="submit"] {
     border-color: #ffb5bd;
     color: #26070c;
     background: #ff9ca6;
 }
 
-#incident-recognition-dialog button:disabled {
+#incident-recognition-dialog button:disabled,
+#normalization-verification-dialog button:disabled {
     cursor: wait;
     opacity: 0.65;
 }
@@ -1264,7 +1316,7 @@ body > div > header > p[role="status"][data-emergency-state="none"] {
 
 .alarm-lifecycle {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 5px;
     margin: 14px 0;
 }
